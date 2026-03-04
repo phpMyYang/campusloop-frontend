@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* CampusLoop Summer Vibe Color Palette */
+  --color-primary: #626F47;   /* Buttons/Headers */
+  --color-secondary: #A4B465; /* Backgrounds */
+  --color-accent: #F5ECD5;    /* Highlights */
+  --color-neutral: #F0BB78;   /* Containers/Cards */
+
+  /* Global Font */
+  --font-global: 'Poppins', 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-global);
+  background-color: var(--color-secondary);
+  color: #333333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom Button Class integrating your Primary Color */
+.btn-campus-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+}
+.btn-campus-primary:hover {
+  background-color: #4a5435;
+  color: #ffffff;
+}
