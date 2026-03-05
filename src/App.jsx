@@ -12,10 +12,10 @@ import EmailVerification from "./pages/Auth/EmailVerification";
 // Admin Components
 import AdminLayout from "./components/Layouts/AdminLayout";
 import UserRecords from "./pages/Admin/UserRecords";
+import Strands from "./pages/Admin/Strands";
 import {
   Dashboard,
   StudentGrades,
-  Strands,
   Subjects,
   ClassroomsAdmin,
   FormsAdmin,
