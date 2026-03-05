@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { sileo } from "sileo";
@@ -11,11 +11,18 @@ const darkToast = {
 };
 
 const AdminLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Para sa Mobile
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Para sa Desktop Resize
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("Loading...");
   const navigate = useNavigate();
+
+  // FOOLPROOF REACT STATES PARA SA DROPDOWNS
+  const [showAvatar, setShowAvatar] = useState(false);
+  const [showNotif, setShowNotif] = useState(false);
+
+  const avatarRef = useRef(null);
+  const notifRef = useRef(null);
 
   const user = JSON.parse(
     localStorage.getItem("campusloop_user") ||
@@ -26,7 +33,22 @@ const AdminLayout = () => {
   const toggleSidebarMobile = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleSidebarDesktop = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
+  // ISARA ANG DROPDOWNS KAPAG PUMINDOT SA LABAS
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (avatarRef.current && !avatarRef.current.contains(event.target)) {
+        setShowAvatar(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotif(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleLogout = async () => {
+    setShowAvatar(false);
     setLoadingText("Signing out...");
     setIsLoading(true);
     try {
@@ -51,6 +73,7 @@ const AdminLayout = () => {
   };
 
   const handleViewAllNotifications = () => {
+    setShowNotif(false);
     setLoadingText("Fetching Notifications...");
     setIsLoading(true);
     setTimeout(() => {
@@ -72,11 +95,10 @@ const AdminLayout = () => {
           ></div>
         )}
 
-        {/* SIDEBAR SECTION (Fixed Full Height)                                       */}
+        {/* SIDEBAR SECTION */}
         <aside
           className={`admin-sidebar shadow-sm bg-white ${isSidebarOpen ? "show" : ""} ${isSidebarCollapsed ? "collapsed" : ""}`}
         >
-          {/* Logo & Brand (Fixed Top) */}
           <div className="p-3 border-bottom text-center sidebar-header flex-shrink-0">
             <div className="sidebar-logo-container d-flex align-items-center justify-content-center mb-2">
               <img
@@ -99,7 +121,6 @@ const AdminLayout = () => {
             </span>
           </div>
 
-          {/* Navigation Links (Scrollable Container) */}
           <div className="sidebar-links-container custom-scrollbar py-3">
             <NavLink
               to="/admin/dashboard"
@@ -227,14 +248,13 @@ const AdminLayout = () => {
             </NavLink>
           </div>
 
-          {/* Sidebar Footer: Avatar & Settings (Fixed Bottom) */}
+          {/* AVATAR DROPDOWN */}
           <div className="p-3 border-top bg-light flex-shrink-0">
-            <div className="dropup w-100">
+            <div className="dropup w-100 position-relative" ref={avatarRef}>
               <button
                 className="sidebar-footer-btn btn w-100 text-start d-flex align-items-center justify-content-between border-0 p-1"
                 type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+                onClick={() => setShowAvatar(!showAvatar)}
               >
                 <div className="d-flex align-items-center justify-content-center w-100 text-lg-start">
                   <div
@@ -265,16 +285,20 @@ const AdminLayout = () => {
                 </div>
               </button>
 
-              {/* Inalis ang w-100, naglagay ng minWidth, at inayos ang truncation ng email */}
               <ul
-                className="dropdown-menu shadow-lg border-0 rounded-4 mb-2"
-                style={{ minWidth: "250px" }}
+                className={`dropdown-menu shadow-lg border-0 rounded-4 mb-2 ${showAvatar ? "show" : ""}`}
+                style={{
+                  display: showAvatar ? "block" : "none",
+                  position: "absolute",
+                  bottom: "100%",
+                  left: "0",
+                  minWidth: "250px",
+                }}
               >
                 <li>
                   <span className="dropdown-item-text text-muted small pb-2">
                     Signed in as
                     <br />
-                    {/* text-truncate para putulin ng "..." kapag sobrang haba ng email */}
                     <b
                       className="text-dark d-inline-block text-truncate w-100"
                       style={{ maxWidth: "220px" }}
@@ -291,6 +315,7 @@ const AdminLayout = () => {
                     className="dropdown-item py-2 fw-medium"
                     data-bs-toggle="modal"
                     data-bs-target="#activityLogsModal"
+                    onClick={() => setShowAvatar(false)}
                   >
                     <i className="bi bi-clock-history text-primary me-2"></i>{" "}
                     Activity Logs
@@ -301,6 +326,7 @@ const AdminLayout = () => {
                     className="dropdown-item py-2 fw-medium"
                     data-bs-toggle="modal"
                     data-bs-target="#adminHelpModal"
+                    onClick={() => setShowAvatar(false)}
                   >
                     <i className="bi bi-question-circle text-primary me-2"></i>{" "}
                     Help Center
@@ -322,20 +348,16 @@ const AdminLayout = () => {
           </div>
         </aside>
 
-        {/* MAIN CONTENT AREA (Scrollable yung loob lang)                             */}
+        {/* MAIN CONTENT AREA */}
         <main className="admin-main-content custom-scrollbar">
-          {/* NAVBAR SECTION (Fixed sa taas ng main content) */}
           <header className="admin-navbar bg-white px-4 py-3">
             <div className="d-flex align-items-center">
-              {/* DESKTOP CAKE MENU (Resize Sidebar) */}
               <button
                 className="btn border-0 fs-4 text-dark p-0 me-3 d-none d-lg-block"
                 onClick={toggleSidebarDesktop}
               >
                 <i className="bi bi-list"></i>
               </button>
-
-              {/* MOBILE CAKE MENU (Open Sidebar) */}
               <button
                 className="btn border-0 fs-3 text-dark p-0 me-3 d-lg-none"
                 onClick={toggleSidebarMobile}
@@ -343,13 +365,12 @@ const AdminLayout = () => {
                 <i className="bi bi-list"></i>
               </button>
 
-              {/* SY & SEMESTER */}
               <div className="d-none d-md-flex align-items-center gap-3 border rounded-pill px-3 py-1 bg-light">
                 <span className="fw-bold text-muted small">
                   <i
                     className="bi bi-calendar-event me-2"
                     style={{ color: "var(--primary-color)" }}
-                  ></i>
+                  ></i>{" "}
                   SY: 2025-2026
                 </span>
                 <div className="vr"></div>
@@ -357,13 +378,13 @@ const AdminLayout = () => {
                   <i
                     className="bi bi-clock-history me-2"
                     style={{ color: "var(--primary-color)" }}
-                  ></i>
+                  ></i>{" "}
                   1st Semester
                 </span>
               </div>
             </div>
 
-            {/* CALENDAR & NOTIFICATIONS */}
+            {/* NOTIFICATION DROPDOWN */}
             <div className="d-flex align-items-center gap-2">
               <Link
                 to="/admin/calendar"
@@ -379,7 +400,7 @@ const AdminLayout = () => {
                 <i className="bi bi-calendar-date text-dark fs-5"></i>
               </Link>
 
-              <div className="dropdown">
+              <div className="dropdown position-relative" ref={notifRef}>
                 <button
                   className="btn btn-light rounded-circle shadow-sm position-relative"
                   style={{
@@ -390,16 +411,19 @@ const AdminLayout = () => {
                     justifyContent: "center",
                   }}
                   type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  data-bs-auto-close="outside"
+                  onClick={() => setShowNotif(!showNotif)}
                 >
                   <i className="bi bi-bell-fill text-dark fs-5"></i>
                   <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
                 </button>
+
                 <div
-                  className="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2"
+                  className={`dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 ${showNotif ? "show" : ""}`}
                   style={{
+                    display: showNotif ? "block" : "none",
+                    position: "absolute",
+                    top: "100%",
+                    right: "0",
                     width: "350px",
                     maxWidth: "90vw",
                     padding: 0,
@@ -422,7 +446,6 @@ const AdminLayout = () => {
                     className="overflow-y-auto custom-scrollbar"
                     style={{ maxHeight: "350px" }}
                   >
-                    {/* SAMPLE UNREAD NOTIFICATION */}
                     <a
                       href="#"
                       className="dropdown-item py-3 border-bottom text-wrap"
@@ -483,30 +506,12 @@ const AdminLayout = () => {
             </div>
           </header>
 
-          {/* DYNAMIC CONTENT AREA */}
-          {/* Nilagyan ng wrapper para mapaghiwalay ang content at footer sa loob ng scroller */}
           <div className="d-flex flex-column flex-grow-1">
             <div className="container-fluid p-4 flex-grow-1">
-              {/* DITO NAGLO-LOAD YUNG MGA PAGES (DASHBOARD, etc.) */}
               <Outlet />
-
-              {/* PANSAMANTALANG PAMPADAGDAG NG HEIGHT PARA MA-TEST MO YUNG SCROLLING: */}
-              <div
-                style={{
-                  height: "1500px",
-                  border: "2px dashed #ccc",
-                  marginTop: "20px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#ccc",
-                }}
-              >
-                Scrollable Content Area
-              </div>
             </div>
 
-            {/* FOOTER SECTION */}
+            {/* TERMS & POLICY */}
             <footer className="py-3 bg-white text-center border-top mt-auto flex-shrink-0">
               <small className="text-muted fw-medium">
                 &copy; {new Date().getFullYear()} CampusLoop. All rights
@@ -527,7 +532,7 @@ const AdminLayout = () => {
         </main>
       </div>
 
-      {/* GLOBAL MODALS (Activity Logs & Help Center) & DRAWER                      */}
+      {/* RENDER ANG TERMS & POLICY DRAWER */}
       <TermsAndPolicy />
 
       <div
@@ -549,7 +554,6 @@ const AdminLayout = () => {
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
-                aria-label="Close"
               ></button>
             </div>
             <div className="modal-body p-4 text-center">
@@ -588,7 +592,6 @@ const AdminLayout = () => {
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
-                aria-label="Close"
               ></button>
             </div>
             <div className="modal-body p-4 text-center">
@@ -600,8 +603,7 @@ const AdminLayout = () => {
               />
               <h5 className="text-muted">Help Center (Coming Soon)</h5>
               <p className="small text-muted mb-0">
-                Dito gagawin ang Accordion ng mga instructions para sa lahat ng
-                features ng Admin Module.
+                Dito gagawin ang Accordion ng mga instructions.
               </p>
             </div>
           </div>

@@ -11,9 +11,9 @@ import EmailVerification from "./pages/Auth/EmailVerification";
 
 // Admin Components
 import AdminLayout from "./components/Layouts/AdminLayout";
+import UserRecords from "./pages/Admin/UserRecords";
 import {
   Dashboard,
-  UserRecords,
   StudentGrades,
   Strands,
   Subjects,
@@ -66,7 +66,7 @@ function App() {
   return (
     <>
       <div className="dark">
-        <Toaster theme="dark" position="top-right" />
+        <Toaster theme="dark" position="top-center" />
       </div>
 
       <Routes>
