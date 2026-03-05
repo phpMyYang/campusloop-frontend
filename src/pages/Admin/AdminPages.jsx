@@ -52,11 +52,6 @@ export const ELibraryAdmin = () => (
     <h4 className="text-muted">E-Library Approvals (Coming Soon)</h4>
   </div>
 );
-export const SystemSettings = () => (
-  <div className="p-5 text-center">
-    <h4 className="text-muted">System Settings (Coming Soon)</h4>
-  </div>
-);
 export const RecycleBin = () => (
   <div className="p-5 text-center">
     <h4 className="text-muted">Recycle Bin (Coming Soon)</h4>
