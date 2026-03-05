@@ -3,10 +3,30 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sileo";
 import axios from "axios";
 
+// Auth Components
 import Login from "./pages/Auth/Login";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import EmailVerification from "./pages/Auth/EmailVerification";
+
+// Admin Components
+import AdminLayout from "./components/Layouts/AdminLayout";
+import {
+  Dashboard,
+  UserRecords,
+  StudentGrades,
+  Strands,
+  Subjects,
+  ClassroomsAdmin,
+  FormsAdmin,
+  FilesAdmin,
+  Announcements,
+  ELibraryAdmin,
+  SystemSettings,
+  RecycleBin,
+  AdminCalendar,
+  AdminNotifications,
+} from "./pages/Admin/AdminPages";
 
 // Taga-test kung valid pa ang session
 const DashboardPlaceholder = ({ title }) => {
@@ -56,11 +76,25 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify" element={<EmailVerification />} />
 
-        {/* Placeholders for testing */}
-        <Route
-          path="/admin/dashboard"
-          element={<DashboardPlaceholder title="Admin Dashboard" />}
-        />
+        {/* ADMIN ROUTES (Protected) */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="users" element={<UserRecords />} />
+          <Route path="grades" element={<StudentGrades />} />
+          <Route path="strands" element={<Strands />} />
+          <Route path="subjects" element={<Subjects />} />
+          <Route path="classrooms" element={<ClassroomsAdmin />} />
+          <Route path="forms" element={<FormsAdmin />} />
+          <Route path="files" element={<FilesAdmin />} />
+          <Route path="announcements" element={<Announcements />} />
+          <Route path="library" element={<ELibraryAdmin />} />
+          <Route path="settings" element={<SystemSettings />} />
+          <Route path="recycle-bin" element={<RecycleBin />} />
+          <Route path="calendar" element={<AdminCalendar />} />
+          <Route path="notifications" element={<AdminNotifications />} />
+        </Route>
+
+        {/* Placeholder */}
         <Route
           path="/teacher/home"
           element={<DashboardPlaceholder title="Teacher Home" />}

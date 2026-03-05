@@ -95,3 +95,126 @@ body {
 .sileo-toast-desc {
   color: rgba(255, 255, 255, 0.85) !important;
 }
+
+/* ADMIN LAYOUT STYLES */
+.admin-layout {
+  display: flex;
+  height: 100vh; /* Fixed full screen height */
+  overflow: hidden; /* Pinipigilan ang global scrolling */
+  background-color: var(--accent-color);
+}
+
+.admin-sidebar {
+  width: 280px;
+  background-color: #ffffff;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  transition: width 0.3s ease; /* Smooth na pag-resize */
+  display: flex;
+  flex-direction: column;
+  z-index: 1045;
+  height: 100vh; /* Fixed height para sa sidebar */
+}
+
+/* Kapag ni-resize (Collapsed) ang Sidebar */
+.admin-sidebar.collapsed {
+  width: 80px;
+}
+
+/* Itatago ang mga text at badge kapag naka-collapse */
+.admin-sidebar.collapsed .sidebar-text,
+.admin-sidebar.collapsed .sidebar-badge,
+.admin-sidebar.collapsed .sidebar-footer-text,
+.admin-sidebar.collapsed .menu-header {
+  display: none !important;
+}
+
+/* Ise-center ang mga icons kapag naka-collapse */
+.admin-sidebar.collapsed .sidebar-link {
+  justify-content: center;
+  padding: 10px;
+  margin: 5px 10px;
+}
+
+.admin-sidebar.collapsed .sidebar-link i {
+  margin-right: 0 !important;
+  font-size: 1.4rem;
+}
+
+.admin-sidebar.collapsed .sidebar-logo-container {
+  justify-content: center !important;
+}
+
+.admin-sidebar.collapsed .sidebar-footer-btn {
+  justify-content: center;
+  padding: 10px 0 !important;
+}
+
+.sidebar-link {
+  color: var(--text-dark);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin: 2px 15px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap; /* Para hindi bumaba ang text habang nagre-resize */
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.sidebar-link i {
+  font-size: 1.2rem;
+  margin-right: 12px;
+  transition: margin 0.3s ease;
+}
+
+/* Container ng mga links para ito lang ang mag-scroll sa sidebar */
+.sidebar-links-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Mobile Sidebar Toggle */
+@media (max-width: 991.98px) {
+  .admin-sidebar {
+    position: fixed;
+    left: -280px;
+  }
+  .admin-sidebar.collapsed {
+    width: 280px; /* Disable collapse feature on mobile */
+  }
+  .admin-sidebar.show {
+    left: 0;
+  }
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 1040;
+  }
+}
+
+.admin-main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh; /* Fixed height para sa main content */
+  overflow-y: auto; /* Ito ang magi-scroll para sa dashboard at tables */
+}
+
+.admin-navbar {
+  background-color: #ffffff;
+  padding: 15px 25px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0; /* Para hindi lumiit ang navbar */
+}

@@ -8,6 +8,7 @@ import { sileo } from "sileo";
 // Import Bootstrap and Custom CSS
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./index.css";
 
 // === GLOBAL AXIOS CONFIGURATION (Para sa Single Session Policy) ===
@@ -20,7 +21,7 @@ const darkToast = {
   },
 };
 
-// REQUEST INTERCEPTOR: Laging isama ang token kapag mag-rerequest sa backend
+// Laging isama ang token kapag mag-rerequest sa backend
 axios.interceptors.request.use((config) => {
   const token =
     localStorage.getItem("campusloop_token") ||
@@ -33,7 +34,7 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-// RESPONSE INTERCEPTOR: Saluhin ang 401 Error kapag na-kick-out ng Single Session
+// Saluhin ang 401 Error kapag na-kick-out ng Single Session
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
