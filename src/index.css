@@ -1,31 +1,97 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* CampusLoop Summer Vibe Color Palette */
-  --color-primary: #626F47;   /* Buttons/Headers */
-  --color-secondary: #A4B465; /* Backgrounds */
-  --color-accent: #F5ECD5;    /* Highlights */
-  --color-neutral: #F0BB78;   /* Containers/Cards */
-
-  /* Global Font */
-  --font-global: 'Poppins', 'Inter', sans-serif;
+  --primary-color: #626F47;
+  --secondary-color: #A4B465;
+  --accent-color: #F5ECD5;
+  --neutral-color: #F0BB78;
+  --text-dark: #333333;
 }
 
 body {
-  font-family: var(--font-global);
-  background-color: var(--color-secondary);
-  color: #333333;
-  margin: 0;
-  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--accent-color);
+  color: var(--text-dark);
 }
 
-/* Custom Button Class integrating your Primary Color */
-.btn-campus-primary {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border: none;
+/* Custom Button para sa Summer Vibe */
+.btn-campusloop {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
-.btn-campus-primary:hover {
-  background-color: #4a5435;
-  color: #ffffff;
+
+.btn-campusloop:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+/* CENTERED GLOBAL SPINNER OVERLAY */
+.global-spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.4); /* Glassmorphism background */
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Premium Card wrapper para sa spinner */
+.spinner-card {
+  background-color: #ffffff;
+  padding: 2.5rem 3.5rem;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Image */
+.toga-spinner-image {
+  width: 8rem;
+  height: 8rem;
+  object-fit: contain;
+}
+
+/* Horizontal Jumping Dots Layout */
+.jumping-dots {
+  display: flex;
+  gap: 5px;
+}
+
+/* Design ng Tuldok */
+.jumping-dots .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  animation: jump 1.2s infinite ease-in-out;
+}
+
+/* Delays */
+.jumping-dots .dot:nth-child(1) { animation-delay: 0s; }
+.jumping-dots .dot:nth-child(2) { animation-delay: 0.2s; }
+.jumping-dots .dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Animation Keyframes para sa pagtalon */
+@keyframes jump {
+  0%, 40%, 100% { transform: translateY(0); }
+  20% { transform: translateY(-8px); }
+}
+
+/* SILEO TOAST DARK THEME TEXT FIX */
+.sileo-toast-title {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.sileo-toast-desc {
+  color: rgba(255, 255, 255, 0.85) !important;
 }
