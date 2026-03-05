@@ -13,6 +13,7 @@ import EmailVerification from "./pages/Auth/EmailVerification";
 import AdminLayout from "./components/Layouts/AdminLayout";
 import UserRecords from "./pages/Admin/UserRecords";
 import Strands from "./pages/Admin/Strands";
+import SystemSettings from "./pages/Admin/Settings";
 import {
   Dashboard,
   StudentGrades,
@@ -22,7 +23,6 @@ import {
   FilesAdmin,
   Announcements,
   ELibraryAdmin,
-  SystemSettings,
   RecycleBin,
   AdminCalendar,
   AdminNotifications,
