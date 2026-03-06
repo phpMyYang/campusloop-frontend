@@ -45,7 +45,8 @@ const StrandFormModal = ({
             <div className="modal-body p-4 bg-white">
               <div className="mb-3">
                 <label className="form-label small fw-bold text-dark">
-                  Strand Name (e.g., "STEM")
+                  <i className="bi bi-diagram-3 me-1 text-muted"></i> Strand
+                  Name (e.g., "STEM")
                 </label>
                 <input
                   type="text"
@@ -60,7 +61,8 @@ const StrandFormModal = ({
               </div>
               <div className="mb-2">
                 <label className="form-label small fw-bold text-dark">
-                  Strand Description
+                  <i className="bi bi-card-text me-1 text-muted"></i> Strand
+                  Description
                 </label>
                 <textarea
                   className="form-control bg-light toolbar-input custom-scrollbar"

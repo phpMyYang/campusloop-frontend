@@ -300,12 +300,13 @@ const AdminLayout = () => {
               >
                 <div className="d-flex align-items-center justify-content-center w-100 text-lg-start">
                   <div
-                    className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center fw-bold shadow-sm"
+                    className="rounded-circle text-white d-flex justify-content-center align-items-center fw-bold shadow-sm"
                     style={{
                       width: "40px",
                       height: "40px",
                       fontSize: "1.2rem",
                       flexShrink: 0,
+                      backgroundColor: "var(--primary-color)",
                     }}
                   >
                     {user.first_name ? user.first_name.charAt(0) : "A"}
@@ -321,7 +322,7 @@ const AdminLayout = () => {
                       className="mb-0 text-muted text-truncate"
                       style={{ fontSize: "0.75rem" }}
                     >
-                      Admin Account
+                      {user.email || "admin@campusloop.com"}
                     </p>
                   </div>
                 </div>
@@ -337,21 +338,6 @@ const AdminLayout = () => {
                   minWidth: "250px",
                 }}
               >
-                <li>
-                  <span className="dropdown-item-text text-muted small pb-2">
-                    Signed in as
-                    <br />
-                    <b
-                      className="text-dark d-inline-block text-truncate w-100"
-                      style={{ maxWidth: "220px" }}
-                    >
-                      {user.email || "admin@campusloop.com"}
-                    </b>
-                  </span>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
                 <li>
                   <button
                     className="dropdown-item py-2 fw-medium"

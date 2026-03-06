@@ -35,6 +35,7 @@ const SettingsFormModal = ({
             <div className="modal-body p-4 bg-white">
               <div className="mb-4">
                 <label className="form-label small fw-bold text-dark">
+                  <i className="bi bi-calendar-event me-1 text-muted"></i>{" "}
                   School Year (Format: YYYY-YYYY)
                 </label>
                 <input
@@ -58,6 +59,7 @@ const SettingsFormModal = ({
               </div>
               <div className="mb-2">
                 <label className="form-label small fw-bold text-dark">
+                  <i className="bi bi-clock-history me-1 text-muted"></i>{" "}
                   Semester
                 </label>
                 <select
