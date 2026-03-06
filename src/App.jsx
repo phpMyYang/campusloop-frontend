@@ -15,13 +15,13 @@ import UserRecords from "./pages/Admin/UserRecords";
 import Strands from "./pages/Admin/Strands";
 import SystemSettings from "./pages/Admin/Settings";
 import Subjects from "./pages/Admin/Subjects";
+import Announcements from "./pages/Admin/Announcements";
 import {
   Dashboard,
   StudentGrades,
   ClassroomsAdmin,
   FormsAdmin,
   FilesAdmin,
-  Announcements,
   ELibraryAdmin,
   RecycleBin,
   AdminCalendar,
