@@ -326,7 +326,7 @@ const Strands = () => {
                 </p>
                 <div className="mt-auto">
                   <div
-                    className="badge border text-dark w-100 py-3 rounded-3 d-flex justify-content-between align-items-center"
+                    className="badge border text-dark w-100 py-3 px-4 rounded-3 d-flex justify-content-between align-items-center"
                     style={{ backgroundColor: "var(--accent-color)" }}
                   >
                     <span className="fw-medium">

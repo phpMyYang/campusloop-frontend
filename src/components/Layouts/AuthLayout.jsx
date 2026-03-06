@@ -17,7 +17,7 @@ const AuthLayout = ({ children, illustration }) => {
             style={{ backgroundColor: "var(--neutral-color)" }}
           >
             <div className="row g-0 h-100">
-              {/* Illustration + Logo */}
+              {/* Left Column: Illustration + Logo (Hidden on Mobile) */}
               <div
                 className="col-md-6 d-none d-md-flex position-relative align-items-center justify-content-center p-4"
                 style={{ backgroundColor: "white" }}
@@ -50,9 +50,31 @@ const AuthLayout = ({ children, illustration }) => {
                 />
               </div>
 
-              {/* Form Content */}
+              {/* Right Column: Form Content */}
               <div className="col-md-6 d-flex align-items-center">
                 <div className="card-body p-4 p-lg-5 bg-white h-100 d-flex flex-column justify-content-center">
+                  <div className="d-flex d-md-none align-items-center justify-content-center mb-4">
+                    <img
+                      src="/images/logo.png"
+                      alt="Holy Face Logo"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "contain",
+                      }}
+                    />
+                    <span
+                      className="ms-2 fw-bold fs-3"
+                      style={{
+                        color: "var(--primary-color)",
+                        letterSpacing: "1px",
+                      }}
+                    >
+                      HOLY FACE
+                    </span>
+                  </div>
+
+                  {/* Form Container */}
                   {children}
                 </div>
               </div>
@@ -60,6 +82,7 @@ const AuthLayout = ({ children, illustration }) => {
           </div>
         </div>
       </div>
+
       {/* Footer */}
       <footer className="text-center py-3 mt-auto">
         <small className="text-muted fw-medium">
@@ -73,9 +96,10 @@ const AuthLayout = ({ children, illustration }) => {
           >
             Terms & Policy
           </a>{" "}
+          <span className="text-muted mx-1">|</span>{" "}
           <a
             href="#"
-            className="text-decoration-none ms-2"
+            className="text-decoration-none"
             style={{ color: "var(--primary-color)" }}
             data-bs-toggle="modal"
             data-bs-target="#helpAuthModal"
