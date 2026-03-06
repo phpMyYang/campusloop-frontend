@@ -22,11 +22,6 @@ export const StudentGrades = () => (
     <h4 className="text-muted">Student Grades Module (Coming Soon)</h4>
   </div>
 );
-export const Subjects = () => (
-  <div className="p-5 text-center">
-    <h4 className="text-muted">Subjects Management (Coming Soon)</h4>
-  </div>
-);
 export const ClassroomsAdmin = () => (
   <div className="p-5 text-center">
     <h4 className="text-muted">Classrooms Oversight (Coming Soon)</h4>
