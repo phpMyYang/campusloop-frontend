@@ -305,7 +305,7 @@ const UserDrawer = ({
                 className="btn btn-campusloop w-100 rounded-3 shadow-sm"
                 data-bs-dismiss="offcanvas"
               >
-                <i className="bi bi-x-circle me-2"></i> Close Details
+                <i className="bi bi-check-circle me-2"></i> Okay, Got it!
               </button>
             ) : (
               <button

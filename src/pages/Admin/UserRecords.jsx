@@ -35,6 +35,8 @@ const UserRecords = () => {
   // Drawer States
   const [drawerMode, setDrawerMode] = useState("");
   const [userToUpdate, setUserToUpdate] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -48,24 +50,24 @@ const UserRecords = () => {
     strand_id: "",
   });
 
+  // Isang beses lang maglo-load kapag binuksan ang page
   useEffect(() => {
     fetchStrands();
+    fetchUsers();
   }, []);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [filterRole, filterGender]);
-
+  // I-reset sa page 1 kapag nagbago ang anumang filter
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, filterRole, filterGender, entriesPerPage]);
 
+  // Hindi na natin ipapasa ang filter params sa API. Kukunin natin lahat para mabilis ang filter!
   const fetchUsers = async () => {
     setIsLoading(true);
     setLoadingText("Fetching users...");
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/users?role=${filterRole}&gender=${filterGender}`,
+        `${import.meta.env.VITE_API_BASE_URL}/users`,
       );
       setUsers(response.data);
     } catch (error) {
@@ -143,7 +145,6 @@ const UserRecords = () => {
 
   const proceedToUpdate = () => {
     setTimeout(() => {
-      // Safety cleanup para sa Modal Backdrop bago buksan ang Drawer
       document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
       document.body.classList.remove("modal-open");
       document.body.style.overflow = "";
@@ -185,12 +186,10 @@ const UserRecords = () => {
         });
       }
 
-      // Isara ang Drawer
       const offcanvasElement = document.getElementById("userDrawer");
       const offcanvas = Offcanvas.getInstance(offcanvasElement);
       if (offcanvas) offcanvas.hide();
 
-      // Pagkatapos isara, pilitin nating burahin lahat ng naiwang itim na background
       setTimeout(() => {
         document
           .querySelectorAll(".offcanvas-backdrop")
@@ -207,51 +206,76 @@ const UserRecords = () => {
           error.response?.data?.message || "Please check your inputs.",
         ...darkToast,
       });
-    } finally {
       setIsLoading(false);
     }
   };
 
-  const executeBulkDelete = () => {
+  const confirmDeleteSingle = (user) => {
+    setUserToDelete(user);
+    const modal = new Modal(document.getElementById("deleteConfirmModal"));
+    modal.show();
+  };
+
+  const confirmBulkDelete = () => {
+    setUserToDelete(null);
+    const modal = new Modal(document.getElementById("deleteConfirmModal"));
+    modal.show();
+  };
+
+  const executeDelete = () => {
     setTimeout(async () => {
-      // Safety cleanup ng modal backdrop bago mag-delete
       document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
       document.body.classList.remove("modal-open");
       document.body.style.overflow = "";
       document.body.style.paddingRight = "";
 
       setIsLoading(true);
-      setLoadingText("Deleting Selection...");
+      setLoadingText(
+        userToDelete ? "Deleting User..." : "Deleting Selection...",
+      );
 
       try {
-        await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/users/bulk-delete`,
-          { ids: selectedIds },
-        );
+        if (userToDelete) {
+          await axios.delete(
+            `${import.meta.env.VITE_API_BASE_URL}/users/${userToDelete.id}`,
+          );
+        } else {
+          await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/users/bulk-delete`,
+            { ids: selectedIds },
+          );
+          setSelectedIds([]);
+        }
+
         sileo.success({
           title: "Deletion Complete",
-          description: "Selected users moved to recycle bin.",
+          description: "Moved to recycle bin.",
           ...darkToast,
         });
-        setSelectedIds([]);
         fetchUsers();
       } catch (error) {
         sileo.error({
           title: "Delete Failed",
-          description: "Failed to process bulk deletion.",
+          description:
+            error.response?.data?.message || "Failed to process deletion.",
           ...darkToast,
         });
-      } finally {
         setIsLoading(false);
       }
     }, 400);
   };
 
-  const filteredUsers = users.filter((u) =>
-    `${u.first_name} ${u.last_name} ${u.email}`
+  // INSTANT CLIENT-SIDE FILTERING (ROLE & GENDER ISAMA NA SA SEARCH)
+  const filteredUsers = users.filter((u) => {
+    const matchesSearch = `${u.first_name} ${u.last_name} ${u.email}`
       .toLowerCase()
-      .includes(searchQuery.toLowerCase()),
-  );
+      .includes(searchQuery.toLowerCase());
+
+    const matchesRole = filterRole === "all" || u.role === filterRole;
+    const matchesGender = filterGender === "all" || u.gender === filterGender;
+
+    return matchesSearch && matchesRole && matchesGender;
+  });
 
   const indexOfLastUser = currentPage * entriesPerPage;
   const indexOfFirstUser = indexOfLastUser - entriesPerPage;
@@ -363,8 +387,7 @@ const UserRecords = () => {
             <button
               className="btn btn-danger d-flex align-items-center justify-content-center gap-2 py-2 px-4 flex-shrink-0 rounded-3 shadow-sm"
               disabled={selectedIds.length === 0}
-              data-bs-toggle="modal"
-              data-bs-target="#deleteConfirmModal"
+              onClick={confirmBulkDelete}
             >
               <i className="bi bi-trash3-fill"></i> Delete{" "}
               {selectedIds.length > 0 && `(${selectedIds.length})`}
@@ -533,11 +556,21 @@ const UserRecords = () => {
                       onClick={() => handleConfirmUpdate(user)}
                       data-bs-toggle="modal"
                       data-bs-target="#updateConfirmModal"
-                      className="btn btn-sm btn-light border-0 shadow-sm rounded-circle"
+                      className="btn btn-sm btn-light border-0 shadow-sm me-2 rounded-circle"
                       style={{ width: "35px", height: "35px" }}
                       title="Edit User"
                     >
                       <i className="bi bi-pencil-fill text-dark"></i>
+                    </button>
+
+                    <button
+                      onClick={() => confirmDeleteSingle(user)}
+                      className="btn btn-sm btn-light border-0 shadow-sm rounded-circle"
+                      style={{ width: "35px", height: "35px" }}
+                      title="Delete User"
+                      disabled={user.id === currentUser.id} // Bawal i-delete ang sarili
+                    >
+                      <i className="bi bi-trash-fill text-danger"></i>
                     </button>
                   </td>
                 </tr>
@@ -616,7 +649,7 @@ const UserRecords = () => {
         strandsList={strandsList}
       />
 
-      {/* DELETE CONFIRMATION MODAL */}
+      {/* DYNAMIC DELETE CONFIRMATION MODAL (Handles Single & Bulk) */}
       <div
         className="modal fade"
         id="deleteConfirmModal"
@@ -639,8 +672,15 @@ const UserRecords = () => {
             <div className="modal-body text-center p-4">
               <h4 className="fw-bold text-dark">Confirm Deletion</h4>
               <p className="text-muted mb-0">
-                Are you sure you want to move <b>{selectedIds.length}</b>{" "}
-                selected user(s) to the Recycle Bin?
+                Are you sure you want to move{" "}
+                {userToDelete ? (
+                  <b>
+                    {userToDelete.first_name} {userToDelete.last_name}
+                  </b>
+                ) : (
+                  <b>{selectedIds.length} selected user(s)</b>
+                )}{" "}
+                to the Recycle Bin?
                 <br />
                 This action can be undone later.
               </p>
@@ -657,7 +697,7 @@ const UserRecords = () => {
                 type="button"
                 className="btn btn-danger px-4 fw-medium shadow-sm rounded-3"
                 data-bs-dismiss="modal"
-                onClick={executeBulkDelete}
+                onClick={executeDelete}
               >
                 Yes, Delete
               </button>

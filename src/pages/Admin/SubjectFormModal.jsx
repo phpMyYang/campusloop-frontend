@@ -46,7 +46,8 @@ const SubjectFormModal = ({
             <div className="modal-body p-4 bg-white">
               <div className="mb-3">
                 <label className="form-label small fw-bold text-dark">
-                  Subject Code
+                  <i className="bi bi-journal-code me-1 text-muted"></i> Subject
+                  Code
                 </label>
                 <input
                   type="text"
@@ -62,7 +63,8 @@ const SubjectFormModal = ({
 
               <div className="mb-3">
                 <label className="form-label small fw-bold text-dark">
-                  Subject Description
+                  <i className="bi bi-card-text me-1 text-muted"></i> Subject
+                  Description
                 </label>
                 <input
                   type="text"
@@ -77,7 +79,7 @@ const SubjectFormModal = ({
 
               <div className="mb-3">
                 <label className="form-label small fw-bold text-dark">
-                  Strand
+                  <i className="bi bi-diagram-3 me-1 text-muted"></i> Strand
                 </label>
                 <select
                   className="form-select bg-light toolbar-input"
@@ -98,7 +100,8 @@ const SubjectFormModal = ({
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label className="form-label small fw-bold text-dark">
-                    Grade Level
+                    <i className="bi bi-mortarboard me-1 text-muted"></i> Grade
+                    Level
                   </label>
                   <select
                     className="form-select bg-light toolbar-input"
@@ -114,6 +117,7 @@ const SubjectFormModal = ({
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className="form-label small fw-bold text-dark">
+                    <i className="bi bi-clock-history me-1 text-muted"></i>{" "}
                     Semester
                   </label>
                   <select

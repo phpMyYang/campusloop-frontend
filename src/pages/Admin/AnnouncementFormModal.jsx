@@ -171,6 +171,7 @@ const AnnouncementFormModal = ({
           <div className="modal-body p-4 bg-white">
             <div className="mb-3">
               <label className="form-label small fw-bold text-dark">
+                <i className="bi bi-card-heading me-1 text-muted"></i>{" "}
                 Announcement Title
               </label>
               <input
@@ -188,7 +189,7 @@ const AnnouncementFormModal = ({
 
             <div className="mb-3">
               <label className="form-label small fw-bold text-dark">
-                Content
+                <i className="bi bi-body-text me-1 text-muted"></i> Content
               </label>
               <textarea
                 className="form-control bg-light toolbar-input custom-scrollbar"
@@ -205,7 +206,8 @@ const AnnouncementFormModal = ({
             {/* CHECKBOXES */}
             <div className="mb-4">
               <label className="form-label small fw-bold text-dark">
-                Attachment Options
+                <i className="bi bi-paperclip me-1 text-muted"></i> Attachment
+                Options
               </label>
               <div
                 className="d-flex gap-4 mb-4 p-3 rounded-3"
@@ -272,7 +274,8 @@ const AnnouncementFormModal = ({
                   className="form-label small fw-bold text-muted mb-3 text-uppercase text-center w-100"
                   style={{ letterSpacing: "1px" }}
                 >
-                  Upload Files
+                  <i className="bi bi-file-earmark-arrow-up me-1"></i> Upload
+                  Files
                 </label>
 
                 {/* Drag and Drop Zone (Hidden if View mode) */}
@@ -460,7 +463,7 @@ const AnnouncementFormModal = ({
                 className="btn btn-campusloop px-4 fw-bold rounded-3"
                 onClick={triggerSaveConfirmation}
               >
-                Submit
+                Post
               </button>
             )}
             {modalMode === "update" && (

@@ -356,7 +356,7 @@ const Announcements = () => {
           onClick={openCreateModal}
           className="btn btn-campusloop shadow-sm px-4 rounded-3 d-flex align-items-center gap-2"
         >
-          <i className="bi bi-megaphone-fill fs-5"></i> New Announcement
+          <i className="bi bi-plus-lg fs-5"></i> New Announcement
         </button>
       </div>
 
