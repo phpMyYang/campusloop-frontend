@@ -84,6 +84,9 @@ const Settings = () => {
           ...darkToast,
         });
         fetchSettings();
+
+        // MAGPAPADALA NG SIGNAL SA NAVBAR PARA MAG-REFRESH AGAD
+        window.dispatchEvent(new Event("settingsChanged"));
       } catch (error) {
         sileo.error({
           title: "Failed",
@@ -120,6 +123,9 @@ const Settings = () => {
         });
         setCurrentSetting(null);
         fetchSettings();
+
+        // MAGPAPADALA NG SIGNAL SA NAVBAR PARA MAG-REFRESH AGAD
+        window.dispatchEvent(new Event("settingsChanged"));
       } catch (error) {
         sileo.error({
           title: "Failed",

@@ -12,6 +12,7 @@ const darkToast = {
 
 const UserRecords = () => {
   const [users, setUsers] = useState([]);
+  const [strandsList, setStrandsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("Loading...");
 
@@ -48,6 +49,10 @@ const UserRecords = () => {
   });
 
   useEffect(() => {
+    fetchStrands();
+  }, []);
+
+  useEffect(() => {
     fetchUsers();
   }, [filterRole, filterGender]);
 
@@ -71,6 +76,17 @@ const UserRecords = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchStrands = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/strands`,
+      );
+      setStrandsList(response.data);
+    } catch (error) {
+      console.error("Failed to fetch strands for dropdown", error);
     }
   };
 
@@ -597,6 +613,7 @@ const UserRecords = () => {
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
         calculateAge={calculateAge}
+        strandsList={strandsList}
       />
 
       {/* DELETE CONFIRMATION MODAL */}

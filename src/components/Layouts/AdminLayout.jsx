@@ -30,8 +30,50 @@ const AdminLayout = () => {
       "{}",
   );
 
+  const [activeSettings, setActiveSettings] = useState({
+    school_year: "Loading...",
+    semester: "...",
+  });
+
   const toggleSidebarMobile = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleSidebarDesktop = () => setIsSidebarCollapsed(!isSidebarCollapsed);
+
+  // UNIN ANG ACTIVE SETTINGS AT MAKINIG SA "settingsChanged" EVENT
+  useEffect(() => {
+    fetchActiveSettings();
+
+    // Event listener para kapag nag-save sa Settings, mag-update ito nang walang reload!
+    window.addEventListener("settingsChanged", fetchActiveSettings);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener("settingsChanged", fetchActiveSettings);
+    };
+  }, []);
+
+  const fetchActiveSettings = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/settings`,
+      );
+      if (response.data) {
+        setActiveSettings({
+          school_year: response.data.school_year,
+          semester: response.data.semester,
+        });
+      } else {
+        setActiveSettings({
+          school_year: "Not Set",
+          semester: "Not Set",
+        });
+      }
+    } catch (error) {
+      setActiveSettings({
+        school_year: "Error",
+        semester: "Error",
+      });
+    }
+  };
 
   // ISARA ANG DROPDOWNS KAPAG PUMINDOT SA LABAS
   useEffect(() => {
@@ -371,7 +413,9 @@ const AdminLayout = () => {
                     className="bi bi-calendar-event me-2"
                     style={{ color: "var(--primary-color)" }}
                   ></i>{" "}
-                  SY: 2025-2026
+                  {activeSettings.school_year !== "Not Set"
+                    ? `SY: ${activeSettings.school_year}`
+                    : "SY: Not Set"}
                 </span>
                 <div className="vr"></div>
                 <span className="fw-bold text-muted small">
@@ -379,7 +423,9 @@ const AdminLayout = () => {
                     className="bi bi-clock-history me-2"
                     style={{ color: "var(--primary-color)" }}
                   ></i>{" "}
-                  1st Semester
+                  {activeSettings.semester !== "Not Set"
+                    ? `${activeSettings.semester} Semester`
+                    : "Semester Not Set"}
                 </span>
               </div>
             </div>

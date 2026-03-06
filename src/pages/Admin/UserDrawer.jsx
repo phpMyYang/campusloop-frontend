@@ -6,6 +6,7 @@ const UserDrawer = ({
   handleInputChange,
   handleSubmit,
   calculateAge,
+  strandsList,
 }) => {
   return (
     <div
@@ -246,11 +247,19 @@ const UserDrawer = ({
                     <i className="bi bi-123 me-1"></i> LRN
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="\d{12}"
+                    maxLength="12"
+                    minLength="12"
+                    title="LRN must be exactly 12 digits."
                     className="form-control bg-light toolbar-input"
                     name="lrn"
                     value={formData.lrn}
-                    onChange={handleInputChange}
+                    onChange={(e) => {
+                      e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                      handleInputChange(e);
+                    }}
                     disabled={drawerMode === "view"}
                     required
                     placeholder="e.g. 109876543210"
@@ -272,8 +281,17 @@ const UserDrawer = ({
                     required
                   >
                     <option value="">Select Strand</option>
-                    <option value="1">STEM</option>
-                    <option value="2">ABM</option>
+                    {strandsList && strandsList.length > 0 ? (
+                      strandsList.map((strand) => (
+                        <option key={strand.id} value={strand.id}>
+                          {strand.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        No strands available
+                      </option>
+                    )}
                   </select>
                 </div>
               </>
