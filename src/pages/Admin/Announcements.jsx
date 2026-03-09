@@ -15,17 +15,16 @@ const Announcements = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("Loading...");
 
-  // Filters & Sorting
   const [searchQuery, setSearchQuery] = useState("");
   const [sortDate, setSortDate] = useState("newest");
   const [filterAttachment, setFilterAttachment] = useState("all");
+  // STATUS FILTER
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  // Selection state for Bulk Delete
   const [selectedIds, setSelectedIds] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
-  // Modal & Form States
   const [modalMode, setModalMode] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -33,9 +32,10 @@ const Announcements = () => {
     title: "",
     content: "",
     link: "",
+    publish_from: "",
+    valid_until: "",
   });
 
-  // States for dynamic file UI
   const [includeLink, setIncludeLink] = useState(false);
   const [includeFiles, setIncludeFiles] = useState(false);
   const [newFiles, setNewFiles] = useState([]);
@@ -45,9 +45,10 @@ const Announcements = () => {
   useEffect(() => {
     fetchAnnouncements();
   }, []);
+
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, sortDate, filterAttachment, entriesPerPage]);
+  }, [searchQuery, sortDate, filterAttachment, filterStatus, entriesPerPage]);
 
   const fetchAnnouncements = async () => {
     setIsLoading(true);
@@ -71,10 +72,22 @@ const Announcements = () => {
   const handleInputChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // ================== MODAL FLOW LOGIC ==================
+  const toDatetimeLocal = (dateString) => {
+    if (!dateString) return "";
+    const d = new Date(dateString);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
+  };
 
   const resetFormStates = () => {
-    setFormData({ title: "", content: "", link: "" });
+    setFormData({
+      title: "",
+      content: "",
+      link: "",
+      publish_from: "",
+      valid_until: "",
+    });
     setNewFiles([]);
     setExistingFiles([]);
     setDeletedFileIds([]);
@@ -82,7 +95,6 @@ const Announcements = () => {
     setIncludeFiles(false);
   };
 
-  // ACTION: View
   const openViewModal = (item) => {
     resetFormStates();
     setModalMode("view");
@@ -91,6 +103,8 @@ const Announcements = () => {
       title: item.title,
       content: item.content,
       link: item.link || "",
+      publish_from: toDatetimeLocal(item.publish_from),
+      valid_until: toDatetimeLocal(item.valid_until),
     });
     setIncludeLink(!!item.link);
     if (item.files && item.files.length > 0) {
@@ -101,7 +115,6 @@ const Announcements = () => {
     modal.show();
   };
 
-  // ACTION: Create
   const openCreateModal = () => {
     resetFormStates();
     setModalMode("create");
@@ -110,14 +123,12 @@ const Announcements = () => {
     modal.show();
   };
 
-  // ACTION: Update (Trigger Pre-Confirm)
   const promptUpdateConfirm = (item) => {
     setSelectedItem(item);
     const modal = new Modal(document.getElementById("updatePreConfirmModal"));
     modal.show();
   };
 
-  // Yes to Update -> Opens Form
   const proceedToUpdateForm = () => {
     setTimeout(() => {
       document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
@@ -127,14 +138,14 @@ const Announcements = () => {
         title: selectedItem.title,
         content: selectedItem.content,
         link: selectedItem.link || "",
+        publish_from: toDatetimeLocal(selectedItem.publish_from),
+        valid_until: toDatetimeLocal(selectedItem.valid_until),
       });
-
       setIncludeLink(!!selectedItem.link);
       if (selectedItem.files && selectedItem.files.length > 0) {
         setIncludeFiles(true);
         setExistingFiles(selectedItem.files);
       }
-
       const formModal = new Modal(
         document.getElementById("announcementFormModal"),
       );
@@ -142,17 +153,30 @@ const Announcements = () => {
     }, 400);
   };
 
-  // Triggered inside Form -> Opens Save/Submit Confirm Modal
   const triggerSaveConfirmation = () => {
-    // Form Validation logic
-    if (!formData.title || !formData.content) {
+    if (
+      !formData.title ||
+      !formData.content ||
+      !formData.publish_from ||
+      !formData.valid_until
+    ) {
       sileo.error({
         title: "Incomplete",
-        description: "Title and Content are required.",
+        description: "Please fill in all required fields including dates.",
         ...darkToast,
       });
       return;
     }
+
+    if (new Date(formData.valid_until) <= new Date(formData.publish_from)) {
+      sileo.error({
+        title: "Invalid Date",
+        description: "Valid Until date must be later than Publish From date.",
+        ...darkToast,
+      });
+      return;
+    }
+
     if (includeLink && !formData.link) {
       sileo.error({
         title: "Incomplete",
@@ -176,7 +200,6 @@ const Announcements = () => {
     }, 400);
   };
 
-  // FINAL EXECUTION API CALL
   const executeSubmit = async () => {
     document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
     document.body.classList.remove("modal-open");
@@ -188,16 +211,17 @@ const Announcements = () => {
     const data = new FormData();
     data.append("title", formData.title);
     data.append("content", formData.content);
+    data.append("publish_from", formData.publish_from);
+    data.append("valid_until", formData.valid_until);
 
-    // Auto-remove logic: Kung in-uncheck sa UI ang link/file, wag ipasa o i-delete sa backend
     if (includeLink && formData.link) data.append("link", formData.link);
-    else data.append("link", ""); // Send empty to tell backend to nullify
+    else data.append("link", "");
+
+    deletedFileIds.forEach((id) => data.append("deleted_file_ids[]", id));
 
     if (includeFiles) {
       newFiles.forEach((file) => data.append("files[]", file));
-      deletedFileIds.forEach((id) => data.append("deleted_file_ids[]", id));
     } else {
-      // Kung inuncheck yung files checkbox, mark all existing as deleted
       existingFiles.forEach((f) => data.append("deleted_file_ids[]", f.id));
     }
 
@@ -210,11 +234,11 @@ const Announcements = () => {
         );
         sileo.success({
           title: "Posted",
-          description: "Announcement is now live.",
+          description: "Announcement is now scheduled.",
           ...darkToast,
         });
       } else {
-        data.append("_method", "PUT"); // Required by Laravel for file uploads on update
+        data.append("_method", "PUT");
         await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/announcements/${selectedItem.id}`,
           data,
@@ -239,10 +263,8 @@ const Announcements = () => {
     }
   };
 
-  // ================== DELETE LOGIC ==================
-
   const confirmDelete = (item = null) => {
-    setSelectedItem(item); // If null, bulk delete
+    setSelectedItem(item);
     const modal = new Modal(document.getElementById("deleteConfirmModal"));
     modal.show();
   };
@@ -284,23 +306,23 @@ const Announcements = () => {
     }, 400);
   };
 
-  const formatDateTime = (dateString) => {
+  const formatDisplayDateTime = (dateString) => {
+    if (!dateString) return "N/A";
     const options = {
-      year: "numeric",
       month: "short",
       day: "numeric",
+      year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  // ================== FILTER, SORT & SELECTION ==================
-
   let processedData = announcements.filter((a) => {
     const matchesSearch =
       a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       a.content.toLowerCase().includes(searchQuery.toLowerCase());
+
     let matchesAttachment = true;
     if (filterAttachment === "files")
       matchesAttachment = a.files && a.files.length > 0;
@@ -309,7 +331,11 @@ const Announcements = () => {
       matchesAttachment = a.files && a.files.length > 0 && !!a.link;
     if (filterAttachment === "none")
       matchesAttachment = (!a.files || a.files.length === 0) && !a.link;
-    return matchesSearch && matchesAttachment;
+
+    // STATUS FILTER LOGIC
+    const matchesStatus = filterStatus === "all" || a.status === filterStatus;
+
+    return matchesSearch && matchesAttachment && matchesStatus;
   });
 
   processedData.sort((a, b) => {
@@ -346,7 +372,7 @@ const Announcements = () => {
             className="fw-bold mb-1"
             style={{ color: "var(--primary-color)" }}
           >
-            Announcement Management <i className="bi bi-megaphone"></i>
+            Announcement Management <i className="bi bi-megaphone ms-1"></i>
           </h3>
           <p className="text-muted small mb-0">
             Create and manage global announcements for students and teachers.
@@ -360,7 +386,7 @@ const Announcements = () => {
         </button>
       </div>
 
-      {/* FILTER TOOLBAR */}
+      {/* TOOLBAR */}
       <div className="card border-0 shadow-sm rounded-4 mb-4 bg-white overflow-hidden">
         <div className="card-body p-3">
           <div className="d-flex flex-nowrap align-items-center gap-3 overflow-x-auto custom-scrollbar pb-1">
@@ -382,7 +408,7 @@ const Announcements = () => {
 
             <div
               className="input-group flex-grow-1"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "180px" }}
             >
               <span className="input-group-text bg-white border-end-0 text-muted ps-3 rounded-start-3">
                 <i className="bi bi-search"></i>
@@ -396,7 +422,7 @@ const Announcements = () => {
               />
             </div>
 
-            <div className="input-group" style={{ minWidth: "150px" }}>
+            <div className="input-group" style={{ minWidth: "140px" }}>
               <span className="input-group-text bg-white border-end-0 text-muted rounded-start-3">
                 <i className="bi bi-calendar-event"></i>
               </span>
@@ -410,7 +436,7 @@ const Announcements = () => {
               </select>
             </div>
 
-            <div className="input-group" style={{ minWidth: "160px" }}>
+            <div className="input-group" style={{ minWidth: "150px" }}>
               <span className="input-group-text bg-white border-end-0 text-muted rounded-start-3">
                 <i className="bi bi-paperclip"></i>
               </span>
@@ -427,6 +453,23 @@ const Announcements = () => {
               </select>
             </div>
 
+            {/* STATUS FILTER */}
+            <div className="input-group" style={{ minWidth: "140px" }}>
+              <span className="input-group-text bg-white border-end-0 text-muted rounded-start-3">
+                <i className="bi bi-funnel"></i>
+              </span>
+              <select
+                className="form-select border-start-0 ps-2 toolbar-input py-2 rounded-end-3"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="all">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Published">Published</option>
+                <option value="Done">Done</option>
+              </select>
+            </div>
+
             <button
               className="btn btn-danger d-flex align-items-center justify-content-center gap-2 py-2 px-4 flex-shrink-0 rounded-3 shadow-sm"
               disabled={selectedIds.length === 0}
@@ -439,12 +482,11 @@ const Announcements = () => {
         </div>
       </div>
 
-      {/* DATATABLE */}
       <div className="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
         <div className="table-responsive custom-scrollbar">
           <table
             className="table table-summer align-middle mb-0"
-            style={{ minWidth: "1000px" }}
+            style={{ minWidth: "1200px" }}
           >
             <thead>
               <tr>
@@ -460,8 +502,8 @@ const Announcements = () => {
                   />
                 </th>
                 <th style={{ width: "60px" }}>#</th>
-                <th style={{ width: "250px" }}>Title</th>
-                <th>Content Preview</th>
+                <th style={{ width: "450px" }}>Announcement Details</th>
+                <th style={{ width: "250px" }}>Schedule & Expiration</th>
                 <th>Attachments</th>
                 <th>Status</th>
                 <th>Created At</th>
@@ -470,8 +512,8 @@ const Announcements = () => {
             </thead>
             <tbody>
               {currentItems.map((item, index) => (
-                <tr key={item.id}>
-                  <td className="ps-4">
+                <tr key={item.id} className="table-row-hover">
+                  <td className="ps-4 py-3">
                     <input
                       type="checkbox"
                       className="form-check-input"
@@ -479,53 +521,107 @@ const Announcements = () => {
                       onChange={() => handleSelect(item.id)}
                     />
                   </td>
-                  <td className="fw-bold text-muted">
+                  <td className="fw-bold text-muted py-3">
                     {(currentPage - 1) * entriesPerPage + index + 1}
                   </td>
-                  <td>
-                    <span
-                      className="fw-bold text-dark text-wrap d-inline-block"
-                      style={{ maxWidth: "230px" }}
-                    >
-                      {item.title}
-                    </span>
+                  <td className="py-3">
+                    <div style={{ maxWidth: "450px" }}>
+                      <h6
+                        className="mb-1 fw-bold text-dark text-truncate"
+                        style={{ fontSize: "0.95rem" }}
+                      >
+                        {item.title}
+                      </h6>
+                      <p
+                        className="mb-0 text-muted text-truncate"
+                        style={{ fontSize: "0.80rem" }}
+                      >
+                        {item.content}
+                      </p>
+                    </div>
                   </td>
-                  <td>
-                    <span
-                      className="text-muted d-inline-block text-truncate"
-                      style={{ maxWidth: "250px", fontSize: "0.85rem" }}
-                    >
-                      {item.content}
-                    </span>
+                  <td className="py-3">
+                    <div className="d-flex flex-column gap-1">
+                      <div
+                        className="d-flex align-items-center text-dark"
+                        style={{ fontSize: "0.85rem" }}
+                      >
+                        <div
+                          className="rounded-circle bg-success bg-opacity-10 d-flex justify-content-center align-items-center me-2"
+                          style={{ width: "24px", height: "24px" }}
+                        >
+                          <i
+                            className="bi bi-calendar-check text-success"
+                            style={{ fontSize: "0.75rem" }}
+                          ></i>
+                        </div>
+                        <span className="fw-medium">
+                          {formatDisplayDateTime(item.publish_from)}
+                        </span>
+                      </div>
+                      <div
+                        className="d-flex align-items-center text-muted"
+                        style={{ fontSize: "0.80rem" }}
+                      >
+                        <div
+                          className="rounded-circle bg-danger bg-opacity-10 d-flex justify-content-center align-items-center me-2"
+                          style={{ width: "24px", height: "24px" }}
+                        >
+                          <i
+                            className="bi bi-calendar-x text-danger"
+                            style={{ fontSize: "0.75rem" }}
+                          ></i>
+                        </div>
+                        <span>{formatDisplayDateTime(item.valid_until)}</span>
+                      </div>
+                    </div>
                   </td>
-                  <td>
+                  <td className="py-3">
                     <div className="d-flex flex-wrap gap-2">
                       {item.link && (
-                        <span className="badge bg-primary bg-opacity-10 text-primary border rounded-pill">
-                          <i className="bi bi-link-45deg"></i> Link
+                        <span className="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle rounded-pill px-2 py-1">
+                          <i className="bi bi-link-45deg me-1"></i> Link
                         </span>
                       )}
                       {item.files && item.files.length > 0 && (
-                        <span className="badge bg-secondary bg-opacity-10 text-secondary border rounded-pill">
-                          <i className="bi bi-file-earmark-fill"></i>{" "}
+                        <span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle rounded-pill px-2 py-1">
+                          <i className="bi bi-file-earmark-text me-1"></i>{" "}
                           {item.files.length} Files
                         </span>
                       )}
                       {!item.link &&
                         (!item.files || item.files.length === 0) && (
-                          <span className="text-muted small">None</span>
+                          <span className="text-muted small">
+                            <i>None</i>
+                          </span>
                         )}
                     </div>
                   </td>
-                  <td>
-                    <span className="badge bg-success text-white rounded-pill px-3 py-2 shadow-sm">
-                      {item.status}
-                    </span>
+                  <td className="py-3">
+                    {item.status === "Pending" && (
+                      <span className="badge bg-warning text-dark rounded-pill px-3 py-2 shadow-sm fw-medium">
+                        <i className="bi bi-hourglass-split me-1"></i> Pending
+                      </span>
+                    )}
+                    {item.status === "Published" && (
+                      <span className="badge bg-success text-white rounded-pill px-3 py-2 shadow-sm fw-medium">
+                        <i className="bi bi-check-circle-fill me-1"></i>{" "}
+                        Published
+                      </span>
+                    )}
+                    {item.status === "Done" && (
+                      <span className="badge bg-secondary text-white rounded-pill px-3 py-2 shadow-sm fw-medium">
+                        <i className="bi bi-dash-circle-fill me-1"></i> Done
+                      </span>
+                    )}
                   </td>
-                  <td className="text-muted small fw-medium">
-                    {formatDateTime(item.created_at)}
+                  <td className="py-3">
+                    <div className="text-muted" style={{ fontSize: "0.80rem" }}>
+                      <i className="bi bi-clock me-1"></i>{" "}
+                      {formatDisplayDateTime(item.created_at)}
+                    </div>
                   </td>
-                  <td className="text-center pe-4">
+                  <td className="text-center pe-4 py-3">
                     <button
                       onClick={() => openViewModal(item)}
                       className="btn btn-sm btn-light border-0 shadow-sm me-2 rounded-circle"
@@ -620,7 +716,7 @@ const Announcements = () => {
         </div>
       )}
 
-      {/* FORM MODAL COMPONENT */}
+      {/* --- MODALS SECTION --- */}
       <AnnouncementFormModal
         modalMode={modalMode}
         formData={formData}
@@ -637,7 +733,6 @@ const Announcements = () => {
         triggerSaveConfirmation={triggerSaveConfirmation}
       />
 
-      {/* CREATE CONFIRMATION */}
       <div
         className="modal fade"
         id="createConfirmModal"
@@ -665,7 +760,7 @@ const Announcements = () => {
             <div className="modal-body text-center p-4">
               <h4 className="fw-bold text-dark">Post Announcement</h4>
               <p className="text-muted mb-0">
-                Are you sure you want to publish this to the global feed?
+                Are you sure you want to schedule this to the global feed?
               </p>
             </div>
             <div className="modal-footer border-0 d-flex justify-content-center pb-4 pt-0 gap-2">
@@ -695,7 +790,6 @@ const Announcements = () => {
         </div>
       </div>
 
-      {/* UPDATE PRE-CONFIRMATION */}
       <div
         className="modal fade"
         id="updatePreConfirmModal"
@@ -747,7 +841,6 @@ const Announcements = () => {
         </div>
       </div>
 
-      {/* SAVE UPDATES CONFIRMATION */}
       <div
         className="modal fade"
         id="saveConfirmModal"
@@ -805,7 +898,6 @@ const Announcements = () => {
         </div>
       </div>
 
-      {/* DELETE CONFIRMATION */}
       <div
         className="modal fade"
         id="deleteConfirmModal"

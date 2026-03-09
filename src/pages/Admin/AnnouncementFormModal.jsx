@@ -18,7 +18,6 @@ const AnnouncementFormModal = ({
 }) => {
   const fileInputRef = useRef(null);
 
-  // File size formatter (e.g., 978 kb, 2.1 MB)
   const formatSize = (bytes) => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -27,7 +26,6 @@ const AnnouncementFormModal = ({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  // Icon generator base sa extension
   const getFileIcon = (extension) => {
     const ext = extension?.toLowerCase();
     if (["pdf"].includes(ext))
@@ -35,35 +33,34 @@ const AnnouncementFormModal = ({
         icon: "bi-file-earmark-pdf-fill",
         color: "#dc3545",
         bg: "#f8d7da",
-      }; // Red
+      };
     if (["doc", "docx"].includes(ext))
       return {
         icon: "bi-file-earmark-word-fill",
         color: "#0d6efd",
         bg: "#cfe2ff",
-      }; // Blue
+      };
     if (["xls", "xlsx"].includes(ext))
       return {
         icon: "bi-file-earmark-excel-fill",
         color: "#198754",
         bg: "#d1e7dd",
-      }; // Green
+      };
     if (["png", "jpg", "jpeg", "gif"].includes(ext))
       return {
         icon: "bi-file-earmark-image-fill",
         color: "#6f42c1",
         bg: "#e0cffc",
-      }; // Purple
+      };
     if (["mp4", "avi", "mov"].includes(ext))
       return {
         icon: "bi-file-earmark-play-fill",
         color: "#fd7e14",
         bg: "#ffe5d0",
-      }; // Orange
-    return { icon: "bi-file-earmark-fill", color: "#6c757d", bg: "#e2e3e5" }; // Default Gray
+      };
+    return { icon: "bi-file-earmark-fill", color: "#6c757d", bg: "#e2e3e5" };
   };
 
-  // Drag and Drop Handlers
   const onDragOver = (e) => e.preventDefault();
   const onDrop = (e) => {
     e.preventDefault();
@@ -74,7 +71,6 @@ const AnnouncementFormModal = ({
     validateAndAddFiles(Array.from(e.target.files));
   };
 
-  // Validation Logic (Max 20MB, Allowed Types)
   const validateAndAddFiles = (files) => {
     const allowedTypes = [
       "application/pdf",
@@ -89,7 +85,7 @@ const AnnouncementFormModal = ({
       "video/avi",
       "video/quicktime",
     ];
-    const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+    const maxSizeBytes = 20 * 1024 * 1024;
 
     const validFiles = files.filter((f) => {
       if (
@@ -117,13 +113,11 @@ const AnnouncementFormModal = ({
     setNewFiles((prev) => [...prev, ...validFiles]);
   };
 
-  const removeNewFile = (index) => {
+  const removeNewFile = (index) =>
     setNewFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const removeExistingFile = (file) => {
     setExistingFiles((prev) => prev.filter((f) => f.id !== file.id));
-    setDeletedFileIds((prev) => [...prev, file.id]); // Mark for backend deletion
+    setDeletedFileIds((prev) => [...prev, file.id]);
   };
 
   return (
@@ -203,14 +197,47 @@ const AnnouncementFormModal = ({
               ></textarea>
             </div>
 
-            {/* CHECKBOXES */}
+            {/* PUBLISH & EXPIRATION DATES */}
+            <div className="row mb-4">
+              <div className="col-md-6 mb-3 mb-md-0">
+                <label className="form-label small fw-bold text-dark">
+                  <i className="bi bi-calendar-check me-1 text-muted"></i>{" "}
+                  Publish From
+                </label>
+                <input
+                  type="datetime-local"
+                  className="form-control bg-light toolbar-input"
+                  name="publish_from"
+                  value={formData.publish_from}
+                  onChange={handleInputChange}
+                  disabled={modalMode === "view"}
+                  required
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label small fw-bold text-dark">
+                  <i className="bi bi-calendar-x me-1 text-muted"></i> Valid
+                  Until
+                </label>
+                <input
+                  type="datetime-local"
+                  className="form-control bg-light toolbar-input"
+                  name="valid_until"
+                  value={formData.valid_until}
+                  onChange={handleInputChange}
+                  disabled={modalMode === "view"}
+                  required
+                />
+              </div>
+            </div>
+
             <div className="mb-4">
               <label className="form-label small fw-bold text-dark">
                 <i className="bi bi-paperclip me-1 text-muted"></i> Attachment
                 Options
               </label>
               <div
-                className="d-flex gap-4 mb-4 p-3 rounded-3"
+                className="d-flex gap-4 p-3 rounded-3"
                 style={{ backgroundColor: "var(--accent-color)" }}
               >
                 <div className="form-check form-switch">
@@ -248,11 +275,10 @@ const AnnouncementFormModal = ({
               </div>
             </div>
 
-            {/* CONDITIONAL LINK INPUT */}
             {includeLink && (
               <div className="mb-4">
                 <label className="form-label small fw-bold text-dark">
-                  <i className="bi bi-link-45deg me-1"></i> URL Link
+                  <i className="bi bi-link-45deg me-1 text-muted"></i> URL Link
                 </label>
                 <input
                   type="url"
@@ -267,18 +293,17 @@ const AnnouncementFormModal = ({
               </div>
             )}
 
-            {/* CONDITIONAL FILE UPLOAD UI (Based on partner's attached image) */}
             {includeFiles && (
               <div className="mb-3">
-                <label
-                  className="form-label small fw-bold text-muted mb-3 text-uppercase text-center w-100"
-                  style={{ letterSpacing: "1px" }}
-                >
-                  <i className="bi bi-file-earmark-arrow-up me-1"></i> Upload
-                  Files
-                </label>
-
-                {/* Drag and Drop Zone (Hidden if View mode) */}
+                <div className="text-center mb-3">
+                  <label
+                    className="form-label small fw-bold text-muted mb-1 text-uppercase w-100"
+                    style={{ letterSpacing: "1px" }}
+                  >
+                    <i className="bi bi-file-earmark-arrow-up me-1"></i> Upload
+                    Files
+                  </label>
+                </div>
                 {modalMode !== "view" && (
                   <div
                     className="p-5 text-center mb-4 rounded-4"
@@ -301,10 +326,9 @@ const AnnouncementFormModal = ({
                       style={{ fontSize: "0.75rem" }}
                     >
                       Accepted formats: PDF, DOCX, XLS, XLSX, PNG, JPG, JPEG,
-                      GIF, MP4, AVI, MOV <br />
-                      Max file size: 20MB
+                      GIF, MP4, AVI, MOV <br /> Max file size: 20MB
                     </p>
-                    <p className="fw-medium text-muted mb-1">
+                    <p className="fw-medium text-dark mb-1">
                       Drag & Drop your files here
                     </p>
                     <p className="small text-muted mb-3">OR</p>
@@ -325,8 +349,6 @@ const AnnouncementFormModal = ({
                     />
                   </div>
                 )}
-
-                {/* Uploaded Files List */}
                 {((existingFiles && existingFiles.length > 0) ||
                   newFiles.length > 0) && (
                   <div>
@@ -337,7 +359,6 @@ const AnnouncementFormModal = ({
                       className="d-flex flex-column gap-2 custom-scrollbar"
                       style={{ maxHeight: "250px", overflowY: "auto" }}
                     >
-                      {/* EXISTING FILES (From Database) */}
                       {existingFiles.map((file) => {
                         const style = getFileIcon(file.file_extension);
                         return (
@@ -387,8 +408,6 @@ const AnnouncementFormModal = ({
                           </div>
                         );
                       })}
-
-                      {/* NEWLY ADDED FILES */}
                       {newFiles.map((file, index) => {
                         const ext = file.name.split(".").pop();
                         const style = getFileIcon(ext);
@@ -456,7 +475,6 @@ const AnnouncementFormModal = ({
             >
               {modalMode === "view" ? "Close" : "Cancel"}
             </button>
-
             {modalMode === "create" && (
               <button
                 type="button"
