@@ -144,7 +144,7 @@ const Settings = () => {
 
       <div className="mb-4">
         <h3 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>
-          System Settings
+          System Settings <i className="bi bi-gear"></i>
         </h3>
         <p className="text-muted small mb-0">
           Configure school year, semester, generate reports, and manage system

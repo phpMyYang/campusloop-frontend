@@ -304,7 +304,7 @@ const UserRecords = () => {
             className="fw-bold mb-1"
             style={{ color: "var(--primary-color)" }}
           >
-            User Management
+            User Management <i className="bi bi-people"></i>
           </h3>
           <p className="text-muted small mb-0">
             Manage all administrators, teachers, and student records.
@@ -314,7 +314,7 @@ const UserRecords = () => {
           onClick={() => openDrawer("create")}
           className="btn btn-campusloop shadow-sm px-4 rounded-3 d-flex align-items-center gap-2"
         >
-          <i className="bi bi-person-plus-fill"></i> New User
+          <i className="bi bi-plus-lg fs-5"></i> New User
         </button>
       </div>
 
