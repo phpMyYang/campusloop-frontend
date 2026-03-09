@@ -159,7 +159,7 @@ const AdminLayout = () => {
               className="sidebar-badge badge rounded-pill w-100 py-2"
               style={{ backgroundColor: "var(--secondary-color)" }}
             >
-              <i className="bi bi-shield-lock-fill me-1"></i> ADMIN
+              <i className="bi bi-shield-lock me-1"></i> ADMIN
             </span>
           </div>
 
@@ -169,7 +169,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-grid-1x2-fill"></i>{" "}
+              <i className="bi bi-grid-1x2"></i>{" "}
               <span className="sidebar-text">Dashboard</span>
             </NavLink>
             <NavLink
@@ -177,7 +177,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-people-fill"></i>{" "}
+              <i className="bi bi-people"></i>{" "}
               <span className="sidebar-text">User Records</span>
             </NavLink>
             <NavLink
@@ -185,7 +185,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-award-fill"></i>{" "}
+              <i className="bi bi-award"></i>{" "}
               <span className="sidebar-text">Student Grades</span>
             </NavLink>
 
@@ -200,7 +200,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-diagram-3-fill"></i>{" "}
+              <i className="bi bi-diagram-3"></i>{" "}
               <span className="sidebar-text">Strands</span>
             </NavLink>
             <NavLink
@@ -208,7 +208,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-book-fill"></i>{" "}
+              <i className="bi bi-book"></i>{" "}
               <span className="sidebar-text">Subjects</span>
             </NavLink>
 
@@ -223,7 +223,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-easel-fill"></i>{" "}
+              <i className="bi bi-easel"></i>{" "}
               <span className="sidebar-text">Classrooms</span>
             </NavLink>
             <NavLink
@@ -231,7 +231,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-file-earmark-text-fill"></i>{" "}
+              <i className="bi bi-file-earmark-text"></i>{" "}
               <span className="sidebar-text">Forms</span>
             </NavLink>
             <NavLink
@@ -239,7 +239,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-folder-fill"></i>{" "}
+              <i className="bi bi-folder"></i>{" "}
               <span className="sidebar-text">Files</span>
             </NavLink>
 
@@ -254,7 +254,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-megaphone-fill"></i>{" "}
+              <i className="bi bi-megaphone"></i>{" "}
               <span className="sidebar-text">Announcements</span>
             </NavLink>
             <NavLink
@@ -262,7 +262,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-journal-bookmark-fill"></i>{" "}
+              <i className="bi bi-journal-bookmark"></i>{" "}
               <span className="sidebar-text">E-Library</span>
             </NavLink>
 
@@ -277,7 +277,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-gear-fill"></i>{" "}
+              <i className="bi bi-gear"></i>{" "}
               <span className="sidebar-text">Settings</span>
             </NavLink>
             <NavLink
@@ -285,7 +285,7 @@ const AdminLayout = () => {
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-trash-fill"></i>{" "}
+              <i className="bi bi-trash"></i>{" "}
               <span className="sidebar-text">Recycle Bin</span>
             </NavLink>
           </div>
@@ -445,7 +445,7 @@ const AdminLayout = () => {
                   type="button"
                   onClick={() => setShowNotif(!showNotif)}
                 >
-                  <i className="bi bi-bell-fill text-dark fs-5"></i>
+                  <i className="bi bi-bell text-dark fs-5"></i>
                   <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
                 </button>
 
@@ -493,7 +493,7 @@ const AdminLayout = () => {
                             flexShrink: 0,
                           }}
                         >
-                          <i className="bi bi-person-check-fill"></i>
+                          <i className="bi bi-person-check"></i>
                         </div>
                         <div className="flex-grow-1">
                           <p className="mb-1 small text-dark fw-bold">

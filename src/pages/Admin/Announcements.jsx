@@ -346,7 +346,7 @@ const Announcements = () => {
             className="fw-bold mb-1"
             style={{ color: "var(--primary-color)" }}
           >
-            Announcement Management
+            Announcement Management <i className="bi bi-megaphone"></i>
           </h3>
           <p className="text-muted small mb-0">
             Create and manage global announcements for students and teachers.

@@ -270,7 +270,7 @@ const Subjects = () => {
             className="fw-bold mb-1"
             style={{ color: "var(--primary-color)" }}
           >
-            Subject Management
+            Subject Management <i className="bi bi-book"></i>
           </h3>
           <p className="text-muted small mb-0">
             Manage and assign subjects to specific strands and semesters.

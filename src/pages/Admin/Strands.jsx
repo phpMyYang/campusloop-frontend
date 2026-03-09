@@ -211,7 +211,7 @@ const Strands = () => {
             className="fw-bold mb-1"
             style={{ color: "var(--primary-color)" }}
           >
-            Strand Management
+            Strand Management <i className="bi bi-diagram-3"></i>
           </h3>
           <p className="text-muted small mb-0">
             Manage all academic strands and view enrolled students.
