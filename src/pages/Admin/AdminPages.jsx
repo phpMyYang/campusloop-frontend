@@ -48,12 +48,6 @@ export const RecycleBin = () => (
   </div>
 );
 
-// Calendar & Notification
-export const AdminCalendar = () => (
-  <div className="p-5 text-center">
-    <h4 className="text-muted">📅 Calendar (Coming Soon)</h4>
-  </div>
-);
 export const AdminNotifications = () => (
   <div className="p-5 text-center">
     <h4 className="text-muted">🔔 All Notifications (Coming Soon)</h4>

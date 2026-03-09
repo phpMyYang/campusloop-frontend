@@ -16,6 +16,7 @@ import Strands from "./pages/Admin/Strands";
 import SystemSettings from "./pages/Admin/Settings";
 import Subjects from "./pages/Admin/Subjects";
 import Announcements from "./pages/Admin/Announcements";
+import AdminCalendar from "./pages/Admin/Calendar";
 import {
   Dashboard,
   StudentGrades,
@@ -24,7 +25,6 @@ import {
   FilesAdmin,
   ELibraryAdmin,
   RecycleBin,
-  AdminCalendar,
   AdminNotifications,
 } from "./pages/Admin/AdminPages";
 

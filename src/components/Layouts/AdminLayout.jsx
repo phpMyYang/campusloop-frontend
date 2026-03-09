@@ -20,6 +20,7 @@ const AdminLayout = () => {
   // FOOLPROOF REACT STATES PARA SA DROPDOWNS
   const [showAvatar, setShowAvatar] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
+  const [hasActiveEvent, setHasActiveEvent] = useState(false);
 
   const avatarRef = useRef(null);
   const notifRef = useRef(null);
@@ -38,9 +39,10 @@ const AdminLayout = () => {
   const toggleSidebarMobile = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleSidebarDesktop = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
-  // UNIN ANG ACTIVE SETTINGS AT MAKINIG SA "settingsChanged" EVENT
+  // KUNIN ANG ACTIVE SETTINGS AT ACTIVE INDICATOR AT MAKINIG SA "settingsChanged" EVENT
   useEffect(() => {
     fetchActiveSettings();
+    fetchActiveIndicator();
 
     // Event listener para kapag nag-save sa Settings, mag-update ito nang walang reload!
     window.addEventListener("settingsChanged", fetchActiveSettings);
@@ -72,6 +74,17 @@ const AdminLayout = () => {
         school_year: "Error",
         semester: "Error",
       });
+    }
+  };
+
+  const fetchActiveIndicator = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/calendar/active-indicator`,
+      );
+      setHasActiveEvent(response.data.has_active_events);
+    } catch (error) {
+      console.error("Failed to fetch calendar indicator", error);
     }
   };
 
@@ -339,6 +352,21 @@ const AdminLayout = () => {
                 }}
               >
                 <li>
+                  <span className="dropdown-item-text text-muted small pb-2">
+                    Signed in as
+                    <br />
+                    <b
+                      className="text-dark d-inline-block text-truncate w-100 text-capitalize"
+                      style={{ maxWidth: "220px" }}
+                    >
+                      {user.role || "Admin"} Account
+                    </b>
+                  </span>
+                </li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
+                <li>
                   <button
                     className="dropdown-item py-2 fw-medium"
                     data-bs-toggle="modal"
@@ -420,7 +448,7 @@ const AdminLayout = () => {
             <div className="d-flex align-items-center gap-2">
               <Link
                 to="/admin/calendar"
-                className="btn btn-light rounded-circle shadow-sm"
+                className="btn btn-light rounded-circle shadow-sm position-relative"
                 style={{
                   width: "40px",
                   height: "40px",
@@ -430,6 +458,9 @@ const AdminLayout = () => {
                 }}
               >
                 <i className="bi bi-calendar-date text-dark fs-5"></i>
+                {hasActiveEvent && (
+                  <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                )}
               </Link>
 
               <div className="dropdown position-relative" ref={notifRef}>
