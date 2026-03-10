@@ -10,14 +10,13 @@ const darkToast = {
   styles: { title: "sileo-toast-title", description: "sileo-toast-desc" },
 };
 
-const AdminLayout = () => {
+const TeacherLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("Loading...");
   const navigate = useNavigate();
 
-  // FOOLPROOF REACT STATES PARA SA DROPDOWNS
   const [showAvatar, setShowAvatar] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
   const [hasActiveEvent, setHasActiveEvent] = useState(false);
@@ -39,15 +38,11 @@ const AdminLayout = () => {
   const toggleSidebarMobile = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleSidebarDesktop = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
-  // KUNIN ANG ACTIVE SETTINGS AT ACTIVE INDICATOR AT MAKINIG SA "settingsChanged" EVENT
   useEffect(() => {
     fetchActiveSettings();
     fetchActiveIndicator();
 
-    // Event listener para kapag nag-save sa Settings, mag-update ito nang walang reload!
     window.addEventListener("settingsChanged", fetchActiveSettings);
-
-    // Cleanup function
     return () => {
       window.removeEventListener("settingsChanged", fetchActiveSettings);
     };
@@ -64,16 +59,10 @@ const AdminLayout = () => {
           semester: response.data.semester,
         });
       } else {
-        setActiveSettings({
-          school_year: "Not Set",
-          semester: "Not Set",
-        });
+        setActiveSettings({ school_year: "Not Set", semester: "Not Set" });
       }
     } catch (error) {
-      setActiveSettings({
-        school_year: "Error",
-        semester: "Error",
-      });
+      setActiveSettings({ school_year: "Error", semester: "Error" });
     }
   };
 
@@ -88,15 +77,12 @@ const AdminLayout = () => {
     }
   };
 
-  // ISARA ANG DROPDOWNS KAPAG PUMINDOT SA LABAS
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (avatarRef.current && !avatarRef.current.contains(event.target)) {
+      if (avatarRef.current && !avatarRef.current.contains(event.target))
         setShowAvatar(false);
-      }
-      if (notifRef.current && !notifRef.current.contains(event.target)) {
+      if (notifRef.current && !notifRef.current.contains(event.target))
         setShowNotif(false);
-      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -133,7 +119,7 @@ const AdminLayout = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      navigate("/admin/notifications");
+      navigate("/teacher/notifications");
     }, 1200);
   };
 
@@ -142,7 +128,6 @@ const AdminLayout = () => {
       <GlobalSpinner isLoading={isLoading} text={loadingText} />
 
       <div className="admin-layout">
-        {/* Mobile Backdrop */}
         {isSidebarOpen && (
           <div
             className="sidebar-backdrop d-lg-none"
@@ -150,7 +135,6 @@ const AdminLayout = () => {
           ></div>
         )}
 
-        {/* SIDEBAR SECTION */}
         <aside
           className={`admin-sidebar shadow-sm bg-white ${isSidebarOpen ? "show" : ""} ${isSidebarCollapsed ? "collapsed" : ""}`}
         >
@@ -172,67 +156,29 @@ const AdminLayout = () => {
               className="sidebar-badge badge rounded-pill w-100 py-2"
               style={{ backgroundColor: "var(--secondary-color)" }}
             >
-              <i className="bi bi-shield-lock me-1"></i> ADMIN
+              <i className="bi bi-person-video3 me-1"></i> TEACHER
             </span>
           </div>
 
           <div className="sidebar-links-container custom-scrollbar py-3">
             <NavLink
-              to="/admin/dashboard"
+              to="/teacher/home"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <i className="bi bi-grid-1x2"></i>{" "}
-              <span className="sidebar-text">Dashboard</span>
+              <i className="bi bi-house-door"></i>{" "}
+              <span className="sidebar-text">Home</span>
             </NavLink>
             <NavLink
-              to="/admin/users"
+              to="/teacher/advisory"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
               <i className="bi bi-people"></i>{" "}
-              <span className="sidebar-text">User Records</span>
+              <span className="sidebar-text">Advisory Class</span>
             </NavLink>
             <NavLink
-              to="/admin/grades"
-              className="sidebar-link"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <i className="bi bi-award"></i>{" "}
-              <span className="sidebar-text">Student Grades</span>
-            </NavLink>
-
-            <div
-              className="menu-header text-muted small fw-bold px-4 mt-4 mb-2"
-              style={{ letterSpacing: "1px", fontSize: "0.75rem" }}
-            >
-              ACADEMIC MANAGEMENT
-            </div>
-            <NavLink
-              to="/admin/strands"
-              className="sidebar-link"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <i className="bi bi-diagram-3"></i>{" "}
-              <span className="sidebar-text">Strands</span>
-            </NavLink>
-            <NavLink
-              to="/admin/subjects"
-              className="sidebar-link"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <i className="bi bi-book"></i>{" "}
-              <span className="sidebar-text">Subjects</span>
-            </NavLink>
-
-            <div
-              className="menu-header text-muted small fw-bold px-4 mt-4 mb-2"
-              style={{ letterSpacing: "1px", fontSize: "0.75rem" }}
-            >
-              MONITORING & OVERSIGHT
-            </div>
-            <NavLink
-              to="/admin/classrooms"
+              to="/teacher/classrooms"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
@@ -240,7 +186,7 @@ const AdminLayout = () => {
               <span className="sidebar-text">Classrooms</span>
             </NavLink>
             <NavLink
-              to="/admin/forms"
+              to="/teacher/forms"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
@@ -248,53 +194,23 @@ const AdminLayout = () => {
               <span className="sidebar-text">Forms</span>
             </NavLink>
             <NavLink
-              to="/admin/files"
+              to="/teacher/files"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
               <i className="bi bi-folder"></i>{" "}
               <span className="sidebar-text">Files</span>
             </NavLink>
-
-            <div
-              className="menu-header text-muted small fw-bold px-4 mt-4 mb-2"
-              style={{ letterSpacing: "1px", fontSize: "0.75rem" }}
-            >
-              CONTENT APPROVAL
-            </div>
             <NavLink
-              to="/admin/announcements"
-              className="sidebar-link"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <i className="bi bi-megaphone"></i>{" "}
-              <span className="sidebar-text">Announcements</span>
-            </NavLink>
-            <NavLink
-              to="/admin/library"
+              to="/teacher/library"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
               <i className="bi bi-journal-bookmark"></i>{" "}
               <span className="sidebar-text">E-Library</span>
             </NavLink>
-
-            <div
-              className="menu-header text-muted small fw-bold px-4 mt-4 mb-2"
-              style={{ letterSpacing: "1px", fontSize: "0.75rem" }}
-            >
-              SYSTEM
-            </div>
             <NavLink
-              to="/admin/settings"
-              className="sidebar-link"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <i className="bi bi-gear"></i>{" "}
-              <span className="sidebar-text">Settings</span>
-            </NavLink>
-            <NavLink
-              to="/admin/recycle-bin"
+              to="/teacher/recycle-bin"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
@@ -303,7 +219,7 @@ const AdminLayout = () => {
             </NavLink>
           </div>
 
-          {/* AVATAR DROPDOWN */}
+          {/* AVATAR FOOTER */}
           <div className="p-3 border-top bg-light flex-shrink-0">
             <div className="dropup w-100 position-relative" ref={avatarRef}>
               <button
@@ -322,7 +238,7 @@ const AdminLayout = () => {
                       backgroundColor: "var(--primary-color)",
                     }}
                   >
-                    {user.first_name ? user.first_name.charAt(0) : "A"}
+                    {user.first_name ? user.first_name.charAt(0) : "T"}
                   </div>
                   <div className="sidebar-footer-text ms-3 overflow-hidden text-start flex-grow-1">
                     <p
@@ -335,7 +251,7 @@ const AdminLayout = () => {
                       className="mb-0 text-muted text-truncate"
                       style={{ fontSize: "0.75rem" }}
                     >
-                      {user.email || "admin@campusloop.com"}
+                      {user.email || "teacher@campusloop.com"}
                     </p>
                   </div>
                 </div>
@@ -366,7 +282,7 @@ const AdminLayout = () => {
                   <button
                     className="dropdown-item py-2 fw-medium"
                     data-bs-toggle="modal"
-                    data-bs-target="#adminHelpModal"
+                    data-bs-target="#teacherHelpModal"
                     onClick={() => setShowAvatar(false)}
                   >
                     <i className="bi bi-question-circle text-primary me-2"></i>{" "}
@@ -390,8 +306,11 @@ const AdminLayout = () => {
         </aside>
 
         {/* MAIN CONTENT AREA */}
-        <main className="admin-main-content custom-scrollbar">
-          <header className="admin-navbar bg-white px-4 py-3">
+        <main
+          className="admin-main-content custom-scrollbar"
+          style={{ backgroundColor: "var(--accent-color)" }}
+        >
+          <header className="admin-navbar bg-white px-4 py-3 shadow-sm z-1">
             <div className="d-flex align-items-center">
               <button
                 className="btn border-0 fs-4 text-dark p-0 me-3 d-none d-lg-block"
@@ -411,7 +330,7 @@ const AdminLayout = () => {
                   <i
                     className="bi bi-calendar-event me-2"
                     style={{ color: "var(--primary-color)" }}
-                  ></i>{" "}
+                  ></i>
                   {activeSettings.school_year !== "Not Set"
                     ? `SY: ${activeSettings.school_year}`
                     : "SY: Not Set"}
@@ -421,7 +340,7 @@ const AdminLayout = () => {
                   <i
                     className="bi bi-clock-history me-2"
                     style={{ color: "var(--primary-color)" }}
-                  ></i>{" "}
+                  ></i>
                   {activeSettings.semester !== "Not Set"
                     ? `${activeSettings.semester} Semester`
                     : "Semester Not Set"}
@@ -429,10 +348,9 @@ const AdminLayout = () => {
               </div>
             </div>
 
-            {/* NOTIFICATION DROPDOWN */}
             <div className="d-flex align-items-center gap-2">
               <Link
-                to="/admin/calendar"
+                to="/teacher/calendar"
                 className="btn btn-light rounded-circle shadow-sm position-relative"
                 style={{
                   width: "40px",
@@ -485,11 +403,8 @@ const AdminLayout = () => {
                     >
                       Notifications
                     </h6>
-                    <span className="badge rounded-pill bg-danger">
-                      2 Unread
-                    </span>
+                    <span className="badge rounded-pill bg-danger">New</span>
                   </div>
-
                   <div
                     className="overflow-y-auto custom-scrollbar"
                     style={{ maxHeight: "350px" }}
@@ -509,38 +424,22 @@ const AdminLayout = () => {
                             flexShrink: 0,
                           }}
                         >
-                          <i className="bi bi-person-check"></i>
+                          <i className="bi bi-info-circle"></i>
                         </div>
                         <div className="flex-grow-1">
                           <p className="mb-1 small text-dark fw-bold">
-                            New user registered!
+                            Welcome to CampusLoop!
                           </p>
                           <p
                             className="mb-0 text-muted"
                             style={{ fontSize: "0.75rem" }}
                           >
-                            A new teacher account was created.
+                            Your teacher account is now active.
                           </p>
-                          <p
-                            className="mb-0 mt-1 fw-bold"
-                            style={{
-                              fontSize: "0.70rem",
-                              color: "var(--secondary-color)",
-                            }}
-                          >
-                            Just now
-                          </p>
-                        </div>
-                        <div className="ms-2 mt-2">
-                          <span
-                            className="p-1 rounded-circle d-inline-block"
-                            style={{ backgroundColor: "var(--primary-color)" }}
-                          ></span>
                         </div>
                       </div>
                     </a>
                   </div>
-
                   <div className="p-3 text-center bg-white border-top">
                     <button
                       onClick={handleViewAllNotifications}
@@ -559,7 +458,6 @@ const AdminLayout = () => {
               <Outlet />
             </div>
 
-            {/* TERMS & POLICY */}
             <footer className="py-3 bg-white text-center border-top mt-auto flex-shrink-0">
               <small className="text-muted fw-medium">
                 &copy; {new Date().getFullYear()} CampusLoop. All rights
@@ -580,7 +478,6 @@ const AdminLayout = () => {
         </main>
       </div>
 
-      {/* RENDER ANG TERMS & POLICY DRAWER */}
       <TermsAndPolicy />
 
       <div
@@ -596,7 +493,7 @@ const AdminLayout = () => {
                 className="modal-title fw-bold"
                 style={{ color: "var(--primary-color)" }}
               >
-                <i className="bi bi-clock-history me-2"></i> Activity Logs
+                <i className="bi bi-clock-history me-2"></i> My Activity Logs
               </h5>
               <button
                 type="button"
@@ -613,8 +510,7 @@ const AdminLayout = () => {
               />
               <h5 className="text-muted">Activity Logs (Coming Soon)</h5>
               <p className="small text-muted mb-0">
-                Dito ilalagay ang Datatable ng lahat ng activities ng Admin at
-                Users.
+                Dito makikita ang datatables ng iyong recent actions sa system.
               </p>
             </div>
           </div>
@@ -623,7 +519,7 @@ const AdminLayout = () => {
 
       <div
         className="modal fade"
-        id="adminHelpModal"
+        id="teacherHelpModal"
         tabIndex="-1"
         aria-hidden="true"
       >
@@ -634,7 +530,8 @@ const AdminLayout = () => {
                 className="modal-title fw-bold"
                 style={{ color: "var(--primary-color)" }}
               >
-                <i className="bi bi-question-circle me-2"></i> Admin Help Center
+                <i className="bi bi-question-circle me-2"></i> Teacher Help
+                Center
               </h5>
               <button
                 type="button"
@@ -643,15 +540,9 @@ const AdminLayout = () => {
               ></button>
             </div>
             <div className="modal-body p-4 text-center">
-              <img
-                src="/images/help.svg"
-                alt="Help"
-                className="img-fluid mb-3"
-                style={{ maxWidth: "150px" }}
-              />
               <h5 className="text-muted">Help Center (Coming Soon)</h5>
               <p className="small text-muted mb-0">
-                Dito gagawin ang Accordion ng mga instructions.
+                Dito gagawin ang Accordion ng mga instructions para sa teachers.
               </p>
             </div>
           </div>
@@ -661,4 +552,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default TeacherLayout;

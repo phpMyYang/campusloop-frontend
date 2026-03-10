@@ -28,6 +28,16 @@ import {
   AdminNotifications,
 } from "./pages/Admin/AdminPages";
 
+// Teacher Components
+import TeacherLayout from "./components/Layouts/TeacherLayout";
+import TeacherHome from "./pages/Teacher/TeacherHome";
+import TeacherAdvisory from "./pages/Teacher/TeacherAdvisory";
+import TeacherClassrooms from "./pages/Teacher/TeacherClassrooms";
+import TeacherForms from "./pages/Teacher/TeacherForms";
+import TeacherFiles from "./pages/Teacher/TeacherFiles";
+import TeacherLibrary from "./pages/Teacher/TeacherLibrary";
+import TeacherRecycleBin from "./pages/Teacher/TeacherRecycleBin";
+
 // Taga-test kung valid pa ang session
 const DashboardPlaceholder = ({ title }) => {
   const testSession = async () => {
@@ -95,10 +105,31 @@ function App() {
         </Route>
 
         {/* Placeholder */}
-        <Route
-          path="/teacher/home"
-          element={<DashboardPlaceholder title="Teacher Home" />}
-        />
+        {/* TEACHER PROTECTED ROUTES */}
+        <Route path="/teacher" element={<TeacherLayout />}>
+          <Route index element={<TeacherHome />} />{" "}
+          {/* Default redirect to home */}
+          <Route path="home" element={<TeacherHome />} />
+          <Route path="advisory" element={<TeacherAdvisory />} />
+          <Route path="classrooms" element={<TeacherClassrooms />} />
+          <Route path="forms" element={<TeacherForms />} />
+          <Route path="files" element={<TeacherFiles />} />
+          <Route path="library" element={<TeacherLibrary />} />
+          <Route path="recycle-bin" element={<TeacherRecycleBin />} />
+          {/* Pwede mo rin i-re-use ang Calendar component ng admin dito kapag ready na, o gumawa ng sarili niya */}
+          <Route
+            path="calendar"
+            element={
+              <div className="p-5 text-center">Calendar (Coming Soon)</div>
+            }
+          />
+          <Route
+            path="notifications"
+            element={
+              <div className="p-5 text-center">Notifications (Coming Soon)</div>
+            }
+          />
+        </Route>
         <Route
           path="/student/home"
           element={<DashboardPlaceholder title="Student Home" />}
