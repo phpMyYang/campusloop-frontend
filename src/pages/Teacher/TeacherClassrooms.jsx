@@ -294,16 +294,6 @@ const TeacherClassrooms = () => {
     <>
       <GlobalSpinner isLoading={isLoading} text={loadingText} />
 
-      <style>{`
-        .premium-hover-card {
-          transition: all 0.3s ease;
-        }
-        .premium-hover-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
-        }
-      `}</style>
-
       {/* Tittle and Button Section */}
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-start mb-3 gap-3">
         <div>
@@ -399,7 +389,10 @@ const TeacherClassrooms = () => {
                           setOpenDropdownId(null);
                         }}
                       >
-                        <i className="bi bi-pencil-square me-2 text-primary"></i>{" "}
+                        <i
+                          className="bi bi-pencil-square me-2"
+                          style={{ color: "var(--primary-color)" }}
+                        ></i>{" "}
                         Update
                       </button>
                     </li>
@@ -539,7 +532,7 @@ const TeacherClassrooms = () => {
                   </div>
                   <button
                     onClick={() => handleEnterClassroom(item.id)}
-                    className="btn btn-campusloop rounded-pill fw-bold px-4 shadow-sm"
+                    className="btn btn-campusloop rounded-3 fw-bold px-4 shadow-sm"
                   >
                     Enter <i className="bi bi-arrow-right ms-1"></i>
                   </button>
@@ -553,10 +546,10 @@ const TeacherClassrooms = () => {
           <div className="col-12">
             <div className="p-5 bg-white rounded-4 shadow-sm text-center border">
               <i
-                className="bi bi-search text-muted d-block mb-3"
+                className="bi bi-inbox text-muted d-block mb-3"
                 style={{ fontSize: "3rem", opacity: 0.5 }}
               ></i>
-              <h5 className="fw-bold text-dark">No Classrooms Found</h5>
+              <h5 className="fw-bold text-dark">No records found.</h5>
               <p className="text-muted small mb-0">
                 {searchQuery
                   ? "No matching classrooms for your search."

@@ -63,13 +63,13 @@ const SettingsFormModal = ({
                   Semester
                 </label>
                 <select
-                  className="form-select bg-light toolbar-input fw-bold"
+                  className="form-select bg-light toolbar-input"
                   name="semester"
                   value={formData.semester}
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="">-- Select Semester --</option>
+                  <option value="">Select Semester</option>
                   <option value="1st">1st Semester</option>
                   <option value="2nd">2nd Semester</option>
                 </select>

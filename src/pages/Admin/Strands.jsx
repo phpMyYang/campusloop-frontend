@@ -60,19 +60,16 @@ const Strands = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // TRIGGER CONFIRMATION MODAL MUNA
   const handleConfirmUpdateClick = (strand) => {
-    setOpenDropdownId(null); // Isara agad ang dropdown
+    setOpenDropdownId(null);
     setSelectedStrand(strand);
     const modalElement = document.getElementById("updateConfirmModal");
     const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
     modal.show();
   };
 
-  // PAGKA-PROCEED, SAKA BUBUKSAN ANG UPDATE FORM
   const proceedToUpdateForm = () => {
     setTimeout(() => {
-      // Safety cleanup para hindi mag-freeze ang screen
       document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
       document.body.classList.remove("modal-open");
       document.body.style.overflow = "";
@@ -81,7 +78,7 @@ const Strands = () => {
       if (selectedStrand) {
         openFormModal("update", selectedStrand);
       }
-    }, 400); // Wait sa hide animation ng confirmation modal
+    }, 400);
   };
 
   const openFormModal = (mode, strand = null) => {
@@ -105,13 +102,10 @@ const Strands = () => {
     const modal = Modal.getInstance(modalElement);
 
     if (modal) modal.hide();
-
-    // Antayin matapos ang hide animation bago buhayin ang Spinner
     setTimeout(() => executeSubmit(), 400);
   };
 
   const executeSubmit = async () => {
-    // Safety Cleanup ulit bago lumabas ang Global Spinner
     document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
     document.body.classList.remove("modal-open");
     document.body.style.overflow = "";
@@ -205,92 +199,93 @@ const Strands = () => {
     <>
       <GlobalSpinner isLoading={isLoading} text={loadingText} />
 
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
+      {/* HEADER WITH BUTTON */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-start mb-3 gap-3">
+        <div className="flex-grow-1">
           <h3
             className="fw-bold mb-1"
             style={{ color: "var(--primary-color)" }}
           >
-            Strand Management <i className="bi bi-diagram-3"></i>
+            Strand Management <i className="bi bi-diagram-3 ms-1"></i>
           </h3>
           <p className="text-muted small mb-0">
             Manage all academic strands and view enrolled students.
           </p>
         </div>
-        <button
-          onClick={() => openFormModal("create")}
-          className="btn btn-campusloop shadow-sm px-4 rounded-3 d-flex align-items-center gap-2"
-        >
-          <i className="bi bi-plus-lg fs-5"></i> New Strand
-        </button>
+
+        <div className="flex-shrink-0">
+          <button
+            onClick={() => openFormModal("create")}
+            className="btn btn-campusloop shadow-sm px-4 rounded-3 d-flex align-items-center gap-2 w-100 justify-content-center"
+          >
+            <i className="bi bi-plus-lg fs-5"></i> New Strand
+          </button>
+        </div>
       </div>
 
+      {/* SEARCH BAR SECTION */}
       <div className="row mb-4">
-        <div className="col-12 col-md-5 col-lg-4">
-          <div
-            className="input-group shadow-sm rounded-3 overflow-hidden bg-white"
-            style={{ border: "1px solid rgba(98, 111, 71, 0.2)" }}
-          >
-            <span className="input-group-text bg-white border-0 text-muted ps-3">
+        <div className="col-12 col-md-6 col-xl-4">
+          <div className="input-group shadow-sm rounded-3 overflow-hidden">
+            <span className="input-group-text bg-white border-end-0 text-muted px-3">
               <i className="bi bi-search"></i>
             </span>
             <input
               type="text"
-              className="form-control border-0 ps-2 py-2 shadow-none"
-              placeholder="Search by Strand Name or Description..."
+              className="form-control border-start-0 ps-0 toolbar-input"
+              placeholder="Search Name or Description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ backgroundColor: "transparent" }}
             />
           </div>
         </div>
       </div>
 
-      {/* GRID CARDS DISPLAY */}
+      {/* GRID CARDS */}
       <div className="row g-4">
         {filteredStrands.map((strand) => (
-          <div className="col-md-6 col-lg-4" key={strand.id}>
-            <div className="card h-100 border-0 shadow-sm rounded-4 position-relative overflow-hidden">
-              <div className="card-header bg-white border-0 pt-4 pb-2 d-flex justify-content-between align-items-start">
-                <h4
-                  className="fw-bold mb-0 d-flex align-items-center"
-                  style={{ color: "var(--primary-color)" }}
+          <div className="col-md-6 col-xl-4" key={strand.id}>
+            <div
+              className="card border-0 shadow-sm rounded-4 h-100 premium-hover-card bg-white"
+              style={{ borderRadius: "1rem" }}
+            >
+              {/* CARD HEADER - REDUCED HEIGHT */}
+              <div
+                className="p-4 position-relative d-flex flex-column justify-content-end"
+                style={{
+                  backgroundColor: "var(--primary-color)",
+                  minHeight: "110px" /* Binawasan ang height mula 140px */,
+                  borderTopLeftRadius: "1rem",
+                  borderTopRightRadius: "1rem",
+                }}
+              >
+                <div
+                  className="dropdown strand-card-dropdown position-absolute top-0 end-0 mt-3 me-3"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <div
-                    className="rounded-circle d-flex justify-content-center align-items-center me-2"
-                    style={{
-                      width: "35px",
-                      height: "35px",
-                      backgroundColor: "rgba(98, 111, 71, 0.1)",
-                    }}
-                  >
-                    <i className="bi bi-diagram-3-fill fs-5"></i>
-                  </div>
-                  {strand.name}
-                </h4>
-
-                <div className="dropdown strand-card-dropdown position-relative">
                   <button
-                    className="btn btn-sm btn-light rounded-circle shadow-sm"
+                    className="btn btn-sm text-white rounded-circle shadow-none d-flex justify-content-center align-items-center p-0"
                     type="button"
                     onClick={() =>
                       setOpenDropdownId(
                         openDropdownId === strand.id ? null : strand.id,
                       )
                     }
-                    style={{ width: "35px", height: "35px" }}
-                  >
-                    <i className="bi bi-three-dots-vertical text-dark"></i>
-                  </button>
-
-                  <ul
-                    className={`dropdown-menu shadow border-0 rounded-3 mt-1 ${openDropdownId === strand.id ? "show" : ""}`}
                     style={{
-                      display: openDropdownId === strand.id ? "block" : "none",
+                      backgroundColor: "rgba(0,0,0,0.2)",
+                      width: "32px",
+                      height: "32px",
+                    }}
+                  >
+                    <i className="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <ul
+                    className={`dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-1 ${openDropdownId === strand.id ? "show" : ""}`}
+                    style={{
                       position: "absolute",
                       top: "100%",
                       right: "0",
-                      zIndex: 1000,
+                      zIndex: 1050,
                     }}
                   >
                     <li>
@@ -318,39 +313,90 @@ const Strands = () => {
                     </li>
                   </ul>
                 </div>
+
+                <div className="pe-4 position-relative z-1">
+                  <h4 className="fw-bold text-white mb-1 text-truncate">
+                    {strand.name}
+                  </h4>
+                  <span className="badge bg-white text-dark bg-opacity-25 px-2 py-1 fw-semibold shadow-sm">
+                    Academic Strand
+                  </span>
+                </div>
               </div>
 
-              <div className="card-body d-flex flex-column">
-                <p className="text-muted small mb-4 ps-1">
-                  {strand.description}
-                </p>
-                <div className="mt-auto">
-                  <div
-                    className="badge border text-dark w-100 py-3 px-4 rounded-3 d-flex justify-content-between align-items-center"
-                    style={{ backgroundColor: "var(--accent-color)" }}
+              {/* CARD BODY */}
+              <div className="card-body p-4 d-flex flex-column position-relative">
+                {/* Floating Icon - REDUCED SIZE */}
+                <div
+                  className="position-absolute shadow-sm rounded-circle d-flex justify-content-center align-items-center fw-bold text-white"
+                  style={{
+                    width: "45px" /* Pinaliit para mas compact */,
+                    height: "45px",
+                    top: "-22px",
+                    right: "24px",
+                    backgroundColor: "var(--secondary-color)",
+                    border: "3px solid white",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  <i className="bi bi-diagram-3-fill"></i>
+                </div>
+
+                <div className="mb-3 mt-1">
+                  <span
+                    className="d-block text-muted mb-1 text-uppercase"
+                    style={{
+                      fontSize: "0.65rem",
+                      letterSpacing: "1px",
+                      fontWeight: "700",
+                    }}
                   >
-                    <span className="fw-medium">
-                      <i className="bi bi-people-fill me-2 text-muted"></i>{" "}
-                      Total Students
-                    </span>
-                    <span className="fw-bold fs-6">
-                      {strand.users_count || 0}
+                    Description
+                  </span>
+                  <p className="text-dark small fw-medium mb-0 text-clamp-3">
+                    {strand.description}
+                  </p>
+                </div>
+
+                {/* Main Details Box - SINGLE ROW LAYOUT */}
+                <div className="bg-light rounded-4 p-3 mt-auto border border-light-subtle d-flex align-items-center justify-content-between">
+                  <div className="d-flex align-items-center">
+                    <div
+                      className="rounded-circle bg-white shadow-sm d-flex justify-content-center align-items-center me-2 flex-shrink-0"
+                      style={{ width: "35px", height: "35px" }}
+                    >
+                      <i className="bi bi-people text-success"></i>
+                    </div>
+                    <span
+                      className="text-muted fw-bold mb-0"
+                      style={{ fontSize: "0.80rem" }}
+                    >
+                      Enrolled Students
                     </span>
                   </div>
+                  <span className="text-dark fw-bold fs-5 mb-0">
+                    {strand.users_count || 0}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         ))}
+
         {filteredStrands.length === 0 && !isLoading && (
-          <div className="col-12 text-center py-5 bg-white rounded-4 shadow-sm">
-            <i
-              className="bi bi-inbox text-muted"
-              style={{ fontSize: "3rem" }}
-            ></i>
-            <p className="text-muted mt-3">
-              No strands found. Try adjusting your search or create a new one.
-            </p>
+          <div className="col-12">
+            <div className="p-5 bg-white rounded-4 shadow-sm text-center border">
+              <i
+                className="bi bi-inbox text-muted d-block mb-3"
+                style={{ fontSize: "3rem", opacity: 0.5 }}
+              ></i>
+              <h5 className="fw-bold text-dark">No records found.</h5>
+              <p className="text-muted small mb-0">
+                {searchQuery
+                  ? "No matching strands for your search."
+                  : "Click the 'New Strand' button to get started."}
+              </p>
+            </div>
           </div>
         )}
       </div>
@@ -403,7 +449,6 @@ const Strands = () => {
               >
                 Cancel
               </button>
-              {/* ITO ANG MAG-TITRIGGER PARA BUMUKAS YUNG FORM MODAL */}
               <button
                 type="button"
                 className="btn btn-campusloop px-4 fw-medium shadow-sm rounded-3"
