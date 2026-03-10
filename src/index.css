@@ -285,3 +285,146 @@ body {
   background-color: #f8f9fa;
   cursor: not-allowed;
 }
+
+/* TOOLBAR & BUTTONS STYLING - CALENDAR */
+.fc .fc-button-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: none !important;
+  border-radius: 8px;
+  text-transform: capitalize;
+  font-weight: 600;
+  padding: 8px 16px;
+}
+.fc .fc-button-primary:hover,
+.fc .fc-button-primary:active,
+.fc .fc-button-primary.fc-button-active {
+  background-color: #4a5435 !important;
+  border-color: #4a5435 !important;
+}
+.fc .fc-toolbar-title {
+  font-weight: 800;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* MONTH VIEW */
+/* Calendar Border Setup */
+.fc-theme-standard .fc-scrollgrid {
+  border: 1px solid #eaecf0 !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.fc-theme-standard td {
+  border-color: #f1f3f5 !important;
+}
+
+/* Day Headers (Mon, Tue, Wed...) */
+.fc-theme-standard th {
+  border-right: none !important;
+  border-left: none !important;
+  background-color: #ffffff;
+  padding: 16px 0;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: #6c757d;
+}
+.fc-col-header-cell-cushion {
+  color: #6c757d !important;
+  text-decoration: none !important;
+  font-weight: 700;
+}
+
+/* Day Numbers Configuration */
+.fc .fc-daygrid-day-top {
+  justify-content: center !important; /* Centered Dates */
+  padding-top: 8px;
+  padding-bottom: 4px;
+}
+.fc-daygrid-day-number {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #495057 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  margin: 0 auto;
+}
+.fc-daygrid-day-number:hover {
+  background-color: rgba(98, 111, 71, 0.1);
+  color: var(--primary-color) !important;
+}
+
+/* "Today" Highlight Style */
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: transparent !important; /* Remove full block highlight */
+}
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  background-color: var(--primary-color);
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(98, 111, 71, 0.3);
+}
+
+/* Event Pills (Month View Floating Effect) */
+.fc-direction-ltr .fc-daygrid-event.fc-h-event.fc-daygrid-block-event {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: none !important;
+  margin: 2px 8px 4px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fc-direction-ltr .fc-daygrid-event.fc-h-event.fc-daygrid-block-event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+}
+.fc-event-main {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* TO-DO LIST VIEW (WEEK / DAY) */
+.fc-list {
+  border-radius: 12px !important;
+  border: 1px solid #eaecf0 !important;
+  overflow: hidden;
+}
+.fc .fc-list-sticky .fc-list-day > * {
+  background-color: #f8f9fa !important;
+  border-color: #eaecf0 !important;
+  padding: 12px 16px !important;
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 0.95rem;
+}
+.fc-list-event:hover td {
+  background-color: rgba(98, 111, 71, 0.05) !important;
+  cursor: pointer;
+}
+.fc-list-event td {
+  padding: 14px 16px !important;
+  border-color: #eaecf0 !important;
+  font-weight: 500;
+  color: #495057;
+}
+.fc-list-event-time {
+  color: #6c757d !important;
+  font-weight: 600;
+  width: 120px;
+}
+.fc-list-event-dot {
+  border-color: inherit; 
+  border-width: 5px !important;
+  border-radius: 50%;
+}
