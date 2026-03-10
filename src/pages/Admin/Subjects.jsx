@@ -430,13 +430,13 @@ const Subjects = () => {
                     {indexOfFirstItem + index + 1}
                   </td>
                   <td>
-                    <span className="badge bg-light text-dark border px-2 py-1 fs-6 shadow-sm">
+                    <span className="badge bg-light text-dark border px-3 py-2 shadow-sm">
                       {subject.code}
                     </span>
                   </td>
                   <td>
                     <span
-                      className="fw-bold text-dark text-truncate d-inline-block"
+                      className="text-dark text-truncate d-inline-block"
                       style={{ maxWidth: "250px" }}
                     >
                       {subject.description}
@@ -489,11 +489,20 @@ const Subjects = () => {
                   </td>
                 </tr>
               ))}
-              {currentItems.length === 0 && (
+              {currentItems.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan="7" className="text-center py-5 text-muted">
-                    <i className="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>{" "}
-                    No subjects found.
+                    {subjects.length === 0 ? (
+                      <>
+                        <i className="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
+                        No records found.
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+                        No matching records found.
+                      </>
+                    )}
                   </td>
                 </tr>
               )}

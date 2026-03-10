@@ -652,11 +652,20 @@ const Announcements = () => {
                   </td>
                 </tr>
               ))}
-              {currentItems.length === 0 && (
+              {currentItems.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan="8" className="text-center py-5 text-muted">
-                    <i className="bi bi-megaphone fs-1 d-block mb-2 opacity-50"></i>{" "}
-                    No announcements found.
+                    {announcements.length === 0 ? (
+                      <>
+                        <i className="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
+                        No records found.
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+                        No matching records found.
+                      </>
+                    )}
                   </td>
                 </tr>
               )}

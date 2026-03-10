@@ -283,7 +283,7 @@ const AdminLayout = () => {
               className="menu-header text-muted small fw-bold px-4 mt-4 mb-2"
               style={{ letterSpacing: "1px", fontSize: "0.75rem" }}
             >
-              SYSTEM
+              SYSTEM SETTINGS
             </div>
             <NavLink
               to="/admin/settings"

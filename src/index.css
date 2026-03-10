@@ -428,3 +428,21 @@ body {
   border-width: 5px !important;
   border-radius: 50%;
 }
+
+/* CAMPUSLOOP PREMIUM COMPONENT STYLES */
+/* Premium Hover Cards (Ginagamit sa Classrooms, Strands, at Settings) */
+.premium-hover-card {
+  transition: all 0.3s ease;
+}
+.premium-hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+
+/* Text Clamp para sa mahahabang description (Ginagamit sa Strands) */
+.text-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

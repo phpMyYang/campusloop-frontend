@@ -43,8 +43,16 @@ const TeacherLayout = () => {
     fetchActiveIndicator();
 
     window.addEventListener("settingsChanged", fetchActiveSettings);
+
+    // SILENT BACKGROUND POLLING PARA REAL-TIME
+    // Magche-check ang system ng settings every 10 seconds nang walang loading spinner
+    const interval = setInterval(() => {
+      fetchActiveSettings();
+    }, 10000);
+
     return () => {
       window.removeEventListener("settingsChanged", fetchActiveSettings);
+      clearInterval(interval); // Cleanup kapag nag-close
     };
   }, []);
 
@@ -458,14 +466,15 @@ const TeacherLayout = () => {
               <Outlet />
             </div>
 
-            <footer className="py-3 bg-white text-center border-top mt-auto flex-shrink-0">
+            <footer className="py-3 bg-white text-center border-top mt-auto flex-shrink-0 px-4">
               <small className="text-muted fw-medium">
                 &copy; {new Date().getFullYear()} CampusLoop. All rights
-                reserved. <br className="d-md-none" />
-                <span className="d-none d-md-inline"> | </span>
+                reserved.
+                <span className="d-none d-md-inline mx-2">|</span>
+                <br className="d-md-none" />
                 <a
                   href="#"
-                  className="text-decoration-none ms-md-2 fw-bold"
+                  className="text-decoration-none fw-bold"
                   style={{ color: "var(--primary-color)" }}
                   data-bs-toggle="offcanvas"
                   data-bs-target="#termsDrawer"

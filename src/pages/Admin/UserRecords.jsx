@@ -517,8 +517,9 @@ const UserRecords = () => {
                       >
                         {user.role}
                       </span>
+                      <div className="vr"></div>
                       <span className="text-muted small fw-bold">
-                        / {user.gender.toUpperCase()}
+                        {user.gender.toUpperCase()}
                       </span>
                     </div>
                   </td>
@@ -575,11 +576,20 @@ const UserRecords = () => {
                   </td>
                 </tr>
               ))}
-              {currentUsers.length === 0 && (
+              {currentUsers.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan="8" className="text-center py-5 text-muted">
-                    <i className="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
-                    No records found.
+                    {users.length === 0 ? (
+                      <>
+                        <i className="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
+                        No records found.
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+                        No matching records found.
+                      </>
+                    )}
                   </td>
                 </tr>
               )}
