@@ -194,7 +194,6 @@ const ClassroomView = () => {
         </div>
       </div>
 
-      {/* ✅ PREMIUM TAB NAVIGATION (FULL WIDTH / JUSTIFIED) */}
       <div className="bg-white rounded-4 shadow-sm mb-4 overflow-hidden">
         <ul className="nav nav-justified custom-premium-tabs m-0">
           <li className="nav-item">
