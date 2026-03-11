@@ -472,3 +472,12 @@ body {
   border-bottom: 3px solid var(--primary-color) !important;
   background-color: transparent !important;
 }
+
+/* SPREADSHEET HOVER EFFECT (GRADES TAB) */
+.hover-bg-light {
+  transition: background-color 0.2s ease;
+}
+
+.hover-bg-light:hover {
+  background-color: rgba(98, 111, 71, 0.05) !important;
+}
