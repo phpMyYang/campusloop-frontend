@@ -446,3 +446,29 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* PREMIUM CLASSROOM TABS DESIGN */
+.custom-premium-tabs {
+  border-bottom: 1px solid #eaecf0;
+}
+
+.custom-premium-tabs .nav-link {
+  color: #6c757d;
+  border-bottom: 3px solid transparent !important;
+  border-radius: 0 !important;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  padding: 1.25rem 1rem !important; /* Pampalaki ng clickable area */
+  margin-bottom: -1px;
+}
+
+.custom-premium-tabs .nav-link:hover {
+  color: var(--primary-color);
+  background-color: rgba(98, 111, 71, 0.03); /* Subtle hover effect */
+}
+
+.custom-premium-tabs .nav-link.active {
+  color: var(--primary-color) !important;
+  border-bottom: 3px solid var(--primary-color) !important;
+  background-color: transparent !important;
+}

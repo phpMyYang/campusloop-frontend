@@ -32,7 +32,13 @@ import {
 import TeacherLayout from "./components/Layouts/TeacherLayout";
 import TeacherHome from "./pages/Teacher/TeacherHome";
 import TeacherAdvisory from "./pages/Teacher/TeacherAdvisory";
+
 import TeacherClassrooms from "./pages/Teacher/TeacherClassrooms";
+import ClassroomView from "./pages/Teacher/Classroom/ClassroomView";
+import TabStream from "./pages/Teacher/Classroom/TabStream";
+import TabPeople from "./pages/Teacher/Classroom/TabPeople";
+import TabGrades from "./pages/Teacher/Classroom/TabGrades";
+
 import TeacherForms from "./pages/Teacher/TeacherForms";
 import TeacherFiles from "./pages/Teacher/TeacherFiles";
 import TeacherLibrary from "./pages/Teacher/TeacherLibrary";
@@ -112,6 +118,11 @@ function App() {
           <Route path="home" element={<TeacherHome />} />
           <Route path="advisory" element={<TeacherAdvisory />} />
           <Route path="classrooms" element={<TeacherClassrooms />} />
+          <Route path="classrooms/:id" element={<ClassroomView />}>
+            <Route path="stream" element={<TabStream />} />
+            <Route path="people" element={<TabPeople />} />
+            <Route path="grades" element={<TabGrades />} />
+          </Route>
           <Route path="forms" element={<TeacherForms />} />
           <Route path="files" element={<TeacherFiles />} />
           <Route path="library" element={<TeacherLibrary />} />
