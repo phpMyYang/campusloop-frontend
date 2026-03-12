@@ -40,6 +40,8 @@ import TabPeople from "./pages/Teacher/Classroom/TabPeople";
 import TabGrades from "./pages/Teacher/Classroom/TabGrades";
 
 import TeacherForms from "./pages/Teacher/TeacherForms";
+import FormInside from "./pages/Teacher/FormInside";
+
 import TeacherFiles from "./pages/Teacher/TeacherFiles";
 import TeacherLibrary from "./pages/Teacher/TeacherLibrary";
 import TeacherRecycleBin from "./pages/Teacher/TeacherRecycleBin";
@@ -124,15 +126,7 @@ function App() {
             <Route path="grades" element={<TabGrades />} />
           </Route>
           <Route path="forms" element={<TeacherForms />} />
-          {/* Placeholder para sa Phase 2 natin! */}
-          <Route
-            path="forms/:id"
-            element={
-              <div className="p-5 text-center mt-5">
-                <h1>Phase 2: Inside Form (Questionnaire & Respondents Tab)</h1>
-              </div>
-            }
-          />
+          <Route path="forms/:id" element={<FormInside />} />
           <Route
             path="forms/:id/builder"
             element={
