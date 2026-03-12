@@ -44,7 +44,7 @@ import FormInside from "./pages/Teacher/FormInside";
 import FormBuilder from "./pages/Teacher/FormBuilder";
 
 import TeacherFiles from "./pages/Teacher/TeacherFiles";
-import TeacherLibrary from "./pages/Teacher/TeacherLibrary";
+import TeacherELibrary from "./pages/Teacher/TeacherELibrary";
 import TeacherRecycleBin from "./pages/Teacher/TeacherRecycleBin";
 
 // Taga-test kung valid pa ang session
@@ -130,7 +130,7 @@ function App() {
           <Route path="forms/:id" element={<FormInside />} />
           <Route path="forms/:id/builder" element={<FormBuilder />} />
           <Route path="files" element={<TeacherFiles />} />
-          <Route path="library" element={<TeacherLibrary />} />
+          <Route path="e-library" element={<TeacherELibrary />} />
           <Route path="recycle-bin" element={<TeacherRecycleBin />} />
           {/* Pwede mo rin i-re-use ang Calendar component ng admin dito kapag ready na, o gumawa ng sarili niya */}
           <Route
