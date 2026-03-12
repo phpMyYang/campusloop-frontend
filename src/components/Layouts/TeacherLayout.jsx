@@ -210,7 +210,7 @@ const TeacherLayout = () => {
               <span className="sidebar-text">Files</span>
             </NavLink>
             <NavLink
-              to="/teacher/library"
+              to="/teacher/e-library"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >
