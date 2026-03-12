@@ -124,6 +124,23 @@ function App() {
             <Route path="grades" element={<TabGrades />} />
           </Route>
           <Route path="forms" element={<TeacherForms />} />
+          {/* Placeholder para sa Phase 2 natin! */}
+          <Route
+            path="forms/:id"
+            element={
+              <div className="p-5 text-center mt-5">
+                <h1>Phase 2: Inside Form (Questionnaire & Respondents Tab)</h1>
+              </div>
+            }
+          />
+          <Route
+            path="forms/:id/builder"
+            element={
+              <div className="p-5 text-center mt-5">
+                <h1>Phase 2: Question Builder Form</h1>
+              </div>
+            }
+          />
           <Route path="files" element={<TeacherFiles />} />
           <Route path="library" element={<TeacherLibrary />} />
           <Route path="recycle-bin" element={<TeacherRecycleBin />} />
