@@ -70,6 +70,36 @@ const FormInside = () => {
   if (isLoading || !form)
     return <GlobalSpinner isLoading={true} text="Loading Form Details..." />;
 
+  const groupedQuestions = [];
+  const existingSections = [];
+
+  if (form.questions) {
+    form.questions.forEach((q) => {
+      const secName = q.section || "";
+      if (!existingSections.includes(secName) && q.section)
+        existingSections.push(secName);
+
+      let group = groupedQuestions.find((g) => g.sectionName === secName);
+      if (!group) {
+        group = {
+          sectionName: secName,
+          instruction: q.instruction || "",
+          questions: [],
+        };
+        groupedQuestions.push(group);
+      } else {
+        if (!group.instruction && q.instruction) {
+          group.instruction = q.instruction;
+        }
+      }
+      group.questions.push(q);
+    });
+  }
+
+  const totalPoints = form.questions
+    ? form.questions.reduce((sum, q) => sum + q.points, 0)
+    : 0;
+
   return (
     <>
       {/* BREADCRUMB NAVIGATION */}
@@ -80,7 +110,7 @@ const FormInside = () => {
               to="/teacher/forms"
               className="text-decoration-none text-muted fw-medium d-flex align-items-center"
             >
-              <i className="bi bi-arrow-left me-1"></i> Back to Forms
+              Forms
             </Link>
           </li>
           <li
@@ -140,7 +170,7 @@ const FormInside = () => {
           <hr className="opacity-10 my-4" />
 
           {/* COMPACT INFO WIDGET */}
-          <div className="d-flex flex-wrap justify-content-center gap-4 gap-md-5 align-items-center bg-light p-3 rounded-4 border border-light-subtle">
+          <div className="d-flex flex-wrap justify-content-center gap-4 gap-md-4 align-items-center bg-light p-3 rounded-4 border border-light-subtle">
             <div className="d-flex align-items-center gap-3 pe-md-4 border-end-md">
               <div
                 className="rounded-circle bg-white shadow-sm d-flex justify-content-center align-items-center flex-shrink-0"
@@ -197,7 +227,7 @@ const FormInside = () => {
               </div>
             </div>
 
-            <div className="d-flex align-items-center gap-3">
+            <div className="d-flex align-items-center gap-3 pe-md-4 border-end-md">
               <div
                 className="rounded-circle bg-white shadow-sm d-flex justify-content-center align-items-center flex-shrink-0"
                 style={{ width: "40px", height: "40px" }}
@@ -226,6 +256,31 @@ const FormInside = () => {
                     Default Order
                   </span>
                 )}
+              </div>
+            </div>
+
+            {/* TOTAL POINTS SA WIDGET ROW */}
+            <div className="d-flex align-items-center gap-3">
+              <div
+                className="rounded-circle bg-white shadow-sm d-flex justify-content-center align-items-center flex-shrink-0"
+                style={{ width: "40px", height: "40px" }}
+              >
+                <i className="bi bi-star-fill text-info fs-5"></i>
+              </div>
+              <div>
+                <span
+                  className="d-block small text-muted fw-bold mb-0"
+                  style={{
+                    fontSize: "0.65rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  Total Points
+                </span>
+                <span className="d-block text-dark small fw-bolder">
+                  {totalPoints} Pts
+                </span>
               </div>
             </div>
           </div>
@@ -278,111 +333,168 @@ const FormInside = () => {
         </button>
       </div>
 
-      {/* TAB 1: QUESTIONNAIRE */}
+      {/* TAB 1: QUESTIONNAIRE (PREVIEW) */}
       {activeTab === "questionnaire" && (
-        <div className="row g-4">
-          {form.questions && form.questions.length > 0 ? (
-            form.questions.map((q, index) => (
-              <div className="col-12" key={q.id}>
-                <div className="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 position-relative">
-                  <div className="d-flex justify-content-between align-items-start mb-4 border-bottom pb-3">
-                    <div className="d-flex align-items-center gap-2">
-                      <span className="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bolder">
-                        Q{index + 1}
-                      </span>
-                      {q.type === "multiple_choice" ? (
-                        <span className="badge bg-light text-muted border px-2 py-1">
-                          <i className="bi bi-ui-radios me-1"></i> Multiple
-                          Choice
-                        </span>
-                      ) : (
-                        <span className="badge bg-light text-muted border px-2 py-1">
-                          <i className="bi bi-fonts me-1"></i> Short Answer
-                        </span>
-                      )}
+        <div className="mx-auto pb-4" style={{ maxWidth: "770px" }}>
+          {groupedQuestions.length > 0 ? (
+            groupedQuestions.map((group, gIndex) => (
+              <div className="mb-5 pb-2" key={gIndex}>
+                {/* SECTION HEADER PREVIEW */}
+                {group.sectionName !== "" && (
+                  <div className="position-relative mt-4 mb-3">
+                    <div
+                      className="px-3 py-1 text-white fw-medium shadow-sm"
+                      style={{
+                        backgroundColor: "var(--primary-color)",
+                        display: "inline-block",
+                        borderTopLeftRadius: "8px",
+                        borderTopRightRadius: "8px",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      Section {gIndex + 1} of {groupedQuestions.length}
                     </div>
-                    <span className="fw-bolder text-dark bg-light px-3 py-2 rounded-3 border">
-                      {q.points} Pts
-                    </span>
-                  </div>
-
-                  <h5
-                    className="fw-bold text-dark mb-4"
-                    style={{ lineHeight: "1.6" }}
-                  >
-                    {q.text}
-                  </h5>
-
-                  {q.type === "multiple_choice" && q.choices && (
-                    <div className="d-flex flex-column gap-3 mb-3">
-                      {q.choices.map((choice, cIndex) => (
-                        <div
-                          key={cIndex}
-                          className={`p-3 rounded-4 border fw-medium d-flex align-items-center transition-all ${q.correct_answer === choice ? "bg-success bg-opacity-10 border-success text-success shadow-sm" : "bg-light text-dark border-light-subtle"}`}
+                    <div
+                      className="card bg-white shadow-sm position-relative"
+                      style={{
+                        border: "1px solid #e0e0e0",
+                        borderTopLeftRadius: "0",
+                        borderTopRightRadius: "8px",
+                        borderBottomLeftRadius: "8px",
+                        borderBottomRightRadius: "8px",
+                      }}
+                    >
+                      <div className="card-body p-4 p-md-4">
+                        <h4
+                          className="fw-normal text-dark mb-2"
+                          style={{ fontSize: "1.5rem" }}
                         >
-                          <div
-                            className={`rounded-circle d-flex justify-content-center align-items-center me-3 flex-shrink-0 ${q.correct_answer === choice ? "bg-success text-white" : "bg-white border text-muted"}`}
-                            style={{
-                              width: "28px",
-                              height: "28px",
-                              fontSize: "0.85rem",
-                            }}
+                          {group.sectionName}
+                        </h4>
+                        {group.instruction && (
+                          <p
+                            className="text-muted small mb-0"
+                            style={{ whiteSpace: "pre-wrap" }}
                           >
-                            {q.correct_answer === choice ? (
-                              <i className="bi bi-check-lg"></i>
-                            ) : (
-                              String.fromCharCode(65 + cIndex)
-                            )}
-                          </div>
-                          {choice}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {q.type === "short_answer" && (
-                    <div className="p-4 rounded-4 border bg-success bg-opacity-10 border-success text-success mb-3 d-flex align-items-center gap-3">
-                      <i className="bi bi-check-circle-fill fs-4"></i>
-                      <div>
-                        <span
-                          className="d-block small fw-bold text-uppercase mb-1"
-                          style={{ letterSpacing: "1px" }}
-                        >
-                          Correct Answer
-                        </span>
-                        <span className="fw-bolder fs-5">
-                          {q.correct_answer}
-                        </span>
+                            {group.instruction}
+                          </p>
+                        )}
                       </div>
                     </div>
-                  )}
+                  </div>
+                )}
+
+                {/* QUESTIONS LIST PREVIEW */}
+                <div className="d-flex flex-column gap-3 mt-3">
+                  {group.questions.map((q, index) => (
+                    <div
+                      className="card bg-white shadow-sm position-relative transition-all"
+                      style={{
+                        border: "1px solid #e0e0e0",
+                        borderLeft: "6px solid var(--primary-color)",
+                        borderRadius: "8px",
+                      }}
+                      key={q.id}
+                    >
+                      <div className="card-body p-4 pt-4 pb-4">
+                        {/* QUESTION HEADER */}
+                        <div className="d-flex justify-content-between align-items-start gap-3 mb-4">
+                          <div className="d-flex gap-2 align-items-start flex-grow-1">
+                            <span className="fw-normal text-dark mt-1">
+                              {index + 1}.
+                            </span>
+                            <h5
+                              className="fw-normal text-dark mb-0"
+                              style={{ fontSize: "1.1rem", lineHeight: "1.5" }}
+                            >
+                              {q.text}
+                            </h5>
+                          </div>
+                          {/* POINTS */}
+                          <div className="text-end flex-shrink-0 mt-1">
+                            <span
+                              className="text-muted fw-medium"
+                              style={{ fontSize: "0.85rem" }}
+                            >
+                              {q.points} pt{q.points > 1 ? "s" : ""}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* DISPLAY CHOICES / ANSWER */}
+                        <div className="ps-4 mb-2">
+                          {q.type === "multiple_choice" && q.choices && (
+                            <div className="d-flex flex-column gap-3">
+                              {q.choices.map((choice, cIndex) => (
+                                <div
+                                  key={cIndex}
+                                  className="d-flex align-items-center gap-3"
+                                >
+                                  <i
+                                    className={`bi ${q.correct_answer === choice ? "bi-check-circle-fill text-success" : "bi-circle text-muted opacity-50"} fs-5`}
+                                  ></i>
+                                  <span
+                                    className={`fw-normal ${q.correct_answer === choice ? "text-success fw-bold" : "text-dark"}`}
+                                    style={{ fontSize: "0.95rem" }}
+                                  >
+                                    {choice}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {q.type === "short_answer" && (
+                            <div
+                              className="d-flex align-items-center gap-3 border-bottom pb-2"
+                              style={{ maxWidth: "400px" }}
+                            >
+                              <span className="text-muted">Answer:</span>
+                              <span className="fw-bold text-success">
+                                {q.correct_answer}
+                              </span>
+                              <i className="bi bi-check-circle-fill text-success ms-auto"></i>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))
           ) : (
-            <div className="col-12">
-              <div className="card bg-white border-0 shadow-sm rounded-4 text-center py-5 px-3">
+            <div className="col-12 mt-4">
+              <div
+                className="card bg-white border border-light-subtle shadow-sm text-center py-5"
+                style={{ borderRadius: "8px" }}
+              >
                 <div className="card-body py-5">
-                  <i
-                    className="bi bi-ui-radios text-muted opacity-50 d-block mb-3"
-                    style={{ fontSize: "4rem" }}
-                  ></i>
-                  <h4 className="fw-bolder text-dark">
+                  <div
+                    className="rounded-circle bg-light d-flex justify-content-center align-items-center mx-auto mb-4"
+                    style={{ width: "90px", height: "90px" }}
+                  >
+                    <i
+                      className="bi bi-ui-radios text-muted opacity-50"
+                      style={{ fontSize: "3rem" }}
+                    ></i>
+                  </div>
+                  <h4 className="fw-normal text-dark mb-3">
                     No questions added yet
                   </h4>
                   <p
-                    className="text-muted mb-4"
-                    style={{ maxWidth: "500px", margin: "0 auto" }}
+                    className="text-muted small mb-4"
+                    style={{ maxWidth: "400px", margin: "0 auto" }}
                   >
                     Your form is currently empty. Open the Question Builder to
-                    start adding sections, instructions, and questions for your
-                    students.
+                    start adding sections and questions.
                   </p>
                   <button
                     onClick={() =>
                       navigate(`/teacher/forms/${form.id}/builder`)
                     }
-                    className="btn btn-campusloop shadow-sm fw-bold px-4 py-2 rounded-3"
+                    className="btn shadow-sm fw-medium px-4 py-2 rounded-3 text-white d-inline-flex align-items-center gap-2"
+                    style={{ backgroundColor: "var(--primary-color)" }}
                   >
                     <i className="bi bi-magic me-2"></i> Go to Builder
                   </button>

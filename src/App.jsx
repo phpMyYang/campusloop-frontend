@@ -41,6 +41,7 @@ import TabGrades from "./pages/Teacher/Classroom/TabGrades";
 
 import TeacherForms from "./pages/Teacher/TeacherForms";
 import FormInside from "./pages/Teacher/FormInside";
+import FormBuilder from "./pages/Teacher/FormBuilder";
 
 import TeacherFiles from "./pages/Teacher/TeacherFiles";
 import TeacherLibrary from "./pages/Teacher/TeacherLibrary";
@@ -127,14 +128,7 @@ function App() {
           </Route>
           <Route path="forms" element={<TeacherForms />} />
           <Route path="forms/:id" element={<FormInside />} />
-          <Route
-            path="forms/:id/builder"
-            element={
-              <div className="p-5 text-center mt-5">
-                <h1>Phase 2: Question Builder Form</h1>
-              </div>
-            }
-          />
+          <Route path="forms/:id/builder" element={<FormBuilder />} />
           <Route path="files" element={<TeacherFiles />} />
           <Route path="library" element={<TeacherLibrary />} />
           <Route path="recycle-bin" element={<TeacherRecycleBin />} />

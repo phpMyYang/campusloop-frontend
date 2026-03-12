@@ -103,7 +103,9 @@ const TeacherForms = () => {
   const executeSubmit = async () => {
     setIsLoading(true);
     setLoadingText(
-      modalMode === "create" ? "Preparing Builder..." : "Saving...",
+      modalMode === "create"
+        ? "Preparing Builder..."
+        : "Saving Form Settings...",
     );
 
     const payload = {
