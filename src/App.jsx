@@ -32,6 +32,7 @@ import {
 import TeacherLayout from "./components/Layouts/TeacherLayout";
 import TeacherHome from "./pages/Teacher/TeacherHome";
 import TeacherAdvisory from "./pages/Teacher/TeacherAdvisory";
+import TeacherAdvisoryDetails from "./pages/Teacher/TeacherAdvisoryDetails";
 
 import TeacherClassrooms from "./pages/Teacher/TeacherClassrooms";
 import ClassroomView from "./pages/Teacher/Classroom/ClassroomView";
@@ -120,6 +121,7 @@ function App() {
           {/* Default redirect to home */}
           <Route path="home" element={<TeacherHome />} />
           <Route path="advisory" element={<TeacherAdvisory />} />
+          <Route path="advisory/:id" element={<TeacherAdvisoryDetails />} />
           <Route path="classrooms" element={<TeacherClassrooms />} />
           <Route path="classrooms/:id" element={<ClassroomView />}>
             <Route path="stream" element={<TabStream />} />
