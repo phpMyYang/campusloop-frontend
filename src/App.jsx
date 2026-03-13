@@ -17,13 +17,13 @@ import SystemSettings from "./pages/Admin/Settings";
 import Subjects from "./pages/Admin/Subjects";
 import Announcements from "./pages/Admin/Announcements";
 import AdminCalendar from "./pages/Admin/Calendar";
+import AdminELibrary from "./pages/Admin/AdminELibrary";
 import {
   Dashboard,
   StudentGrades,
   ClassroomsAdmin,
   FormsAdmin,
   FilesAdmin,
-  ELibraryAdmin,
   RecycleBin,
   AdminNotifications,
 } from "./pages/Admin/AdminPages";
@@ -107,7 +107,7 @@ function App() {
           <Route path="forms" element={<FormsAdmin />} />
           <Route path="files" element={<FilesAdmin />} />
           <Route path="announcements" element={<Announcements />} />
-          <Route path="library" element={<ELibraryAdmin />} />
+          <Route path="e-libraries" element={<AdminELibrary />} />
           <Route path="settings" element={<SystemSettings />} />
           <Route path="recycle-bin" element={<RecycleBin />} />
           <Route path="calendar" element={<AdminCalendar />} />
