@@ -271,7 +271,7 @@ const AdminLayout = () => {
               <span className="sidebar-text">Announcements</span>
             </NavLink>
             <NavLink
-              to="/admin/library"
+              to="/admin/e-libraries"
               className="sidebar-link"
               onClick={() => setIsSidebarOpen(false)}
             >

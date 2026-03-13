@@ -278,14 +278,12 @@ const TeacherELibrary = () => {
     }
   };
 
-  // ✅ INAYOS NA ANG OPEN CONTENT LOGIC PARA MAG-POP UP ANG VIEWER MODAL
   const openFiles = (item) => {
     setViewingItem(item);
     const modal = new Modal(document.getElementById("viewFilesModal"));
     modal.show();
   };
 
-  // ✅ LOGIC PARA BUKSAN ANG ACTUAL PDF SA BAGONG TAB
   const handleViewDocument = (filePath) => {
     const baseUrl = import.meta.env.VITE_API_BASE_URL.replace("/api", "");
     window.open(`${baseUrl}/storage/${filePath}`, "_blank");
