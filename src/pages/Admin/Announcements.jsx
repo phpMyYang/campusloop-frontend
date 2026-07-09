@@ -802,6 +802,8 @@ const Announcements = () => {
         executeDelete={executeDelete}
         selectedItem={selectedItem}
         selectedIds={selectedIds}
+        currentUser={currentUser}
+        announcements={announcements}
       />
 
       <AnnouncementViewModal
