@@ -21,6 +21,8 @@ const AnnouncementFormModal = ({
   executeDelete,
   selectedItem,
   selectedIds,
+  currentUser,
+  announcements,
 }) => {
   const fileInputRef = useRef(null);
 
@@ -549,6 +551,19 @@ const AnnouncementFormModal = ({
               <p className="text-muted mb-0">
                 Proceed to edit <b>{selectedItem?.title}</b>?
               </p>
+              {selectedItem?.creator_id !== currentUser?.id && (
+                <div
+                  className="alert alert-warning d-flex align-items-center mt-3 mb-0 text-start border-warning-subtle shadow-sm rounded-3"
+                  role="alert"
+                >
+                  <i className="bi bi-exclamation-circle-fill fs-4 text-warning me-3"></i>
+                  <div style={{ fontSize: "0.85rem" }}>
+                    <strong>Warning:</strong> This announcement was created by
+                    another admin. They will be notified if you save these
+                    changes.
+                  </div>
+                </div>
+              )}
             </div>
             <div className="modal-footer border-0 d-flex justify-content-center pb-4 pt-0 gap-2">
               <button
@@ -662,6 +677,31 @@ const AnnouncementFormModal = ({
                 )}{" "}
                 to the Recycle Bin?
               </p>
+              {(() => {
+                let showWarning = false;
+                if (selectedItem) {
+                  showWarning = selectedItem.creator_id !== currentUser?.id;
+                } else if (selectedIds?.length > 0) {
+                  showWarning = selectedIds.some((id) => {
+                    const item = announcements.find((a) => a.id === id);
+                    return item && item.creator_id !== currentUser?.id;
+                  });
+                }
+
+                return showWarning ? (
+                  <div
+                    className="alert alert-danger d-flex align-items-center mt-3 mb-0 text-start border-danger-subtle shadow-sm rounded-3"
+                    role="alert"
+                  >
+                    <i className="bi bi-exclamation-circle-fill fs-4 text-danger me-3"></i>
+                    <div style={{ fontSize: "0.85rem" }}>
+                      <strong>Heads up!</strong> You are about to delete content
+                      created by another admin. They will be notified of this
+                      action.
+                    </div>
+                  </div>
+                ) : null;
+              })()}
             </div>
             <div className="modal-footer border-0 d-flex justify-content-center pb-4 pt-0 gap-2">
               <button
