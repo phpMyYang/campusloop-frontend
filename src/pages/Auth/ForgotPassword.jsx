@@ -55,12 +55,21 @@ const ForgotPassword = () => {
       setRecaptchaToken("");
 
       if (error.response) {
-        sileo.error({
-          title: "Request Failed",
-          description:
-            error.response.data.message || "Failed to send reset link.",
-          ...darkToast,
-        });
+        const { status, data } = error.response;
+
+        if (status === 429) {
+          sileo.warning({
+            title: "Too Many Attempts",
+            description: data.message,
+            ...darkToast,
+          });
+        } else {
+          sileo.error({
+            title: "Request Failed",
+            description: data.message || "Failed to send reset link.",
+            ...darkToast,
+          });
+        }
       } else {
         sileo.error({
           title: "Network Error",

@@ -128,7 +128,13 @@ const Login = () => {
       if (error.response) {
         const { status, data } = error.response;
 
-        if (status === 403 && data.require_verification) {
+        if (status === 429) {
+          sileo.warning({
+            title: "Too Many Attempts",
+            description: data.message,
+            ...darkToast,
+          });
+        } else if (status === 403 && data.require_verification) {
           sileo.info({
             title: "Verification Required",
             description: data.message,
