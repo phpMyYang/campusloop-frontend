@@ -66,19 +66,25 @@ const ResetPassword = () => {
       navigate("/login");
     } catch (error) {
       if (error.response) {
-        const errData = error.response.data;
+        const { status, data } = error.response;
 
-        if (errData.errors && errData.errors.password) {
+        if (status === 429) {
+          sileo.warning({
+            title: "Too Many Attempts",
+            description: data.message,
+            ...darkToast,
+          });
+        } else if (data.errors && data.errors.password) {
           sileo.error({
             title: "Validation Error",
-            description: errData.errors.password[0],
+            description: data.errors.password[0],
             ...darkToast,
           });
         } else {
           sileo.error({
             title: "Reset Failed",
             description:
-              errData.message ||
+              data.message ||
               "Failed to reset password. Link might be invalid or expired.",
             ...darkToast,
           });
