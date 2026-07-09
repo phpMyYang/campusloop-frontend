@@ -52,24 +52,45 @@ const EmailVerification = () => {
 
         navigate("/login", { replace: true });
       } catch (error) {
-        const errorMsg =
-          error.response?.data?.message ||
-          "Invalid or expired verification link.";
+        if (error.response) {
+          const { status, data } = error.response;
+          const errorMsg =
+            data.message || "Invalid or expired verification link.";
 
-        if (
-          errorMsg.includes("already been used") ||
-          errorMsg.includes("already active")
-        ) {
-          sileo.info({
-            title: "Already Verified",
-            description: "Your account is already active. You can now log in.",
-            ...darkToast,
-          });
-          navigate("/login", { replace: true });
+          if (status === 429) {
+            sileo.warning({
+              title: "Too Many Attempts",
+              description: data.message,
+              ...darkToast,
+            });
+          } else if (
+            errorMsg.includes("already been used") ||
+            errorMsg.includes("already active")
+          ) {
+            sileo.info({
+              title: "Already Verified",
+              description:
+                "Your account is already active. You can now log in.",
+              ...darkToast,
+            });
+            navigate("/login", { replace: true });
+          } else {
+            sileo.error({
+              title: "Verification Failed",
+              description: errorMsg,
+              ...darkToast,
+            });
+
+            if (emailParam) {
+              setSearchParams({ email: emailParam }, { replace: true });
+            } else {
+              setSearchParams({}, { replace: true });
+            }
+          }
         } else {
           sileo.error({
-            title: "Verification Failed",
-            description: errorMsg,
+            title: "Network Error",
+            description: "Please try again later.",
             ...darkToast,
           });
 
@@ -115,13 +136,31 @@ const EmailVerification = () => {
         ...darkToast,
       });
     } catch (error) {
-      sileo.error({
-        title: "Request Failed",
-        description:
-          error.response?.data?.message ||
-          "Failed to send verification email. Please try again.",
-        ...darkToast,
-      });
+      if (error.response) {
+        const { status, data } = error.response;
+
+        if (status === 429) {
+          sileo.warning({
+            title: "Too Many Attempts",
+            description: data.message,
+            ...darkToast,
+          });
+        } else {
+          sileo.error({
+            title: "Request Failed",
+            description:
+              data.message ||
+              "Failed to send verification email. Please try again.",
+            ...darkToast,
+          });
+        }
+      } else {
+        sileo.error({
+          title: "Network Error",
+          description: "Please try again later.",
+          ...darkToast,
+        });
+      }
     } finally {
       setIsResending(false);
     }
